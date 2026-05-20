@@ -725,11 +725,6 @@ body {
   to { opacity: 0.7; transform: scale(1) rotate(0deg); }
 }
 
-/* Petal numbers */
-.petal-number {
-  font-size: 11px;
-}
-
 /* Petal tooltip */
 .petal-tooltip {
   position: fixed;
@@ -1055,24 +1050,9 @@ body {
     width: 100%;
   }
 
-  .oracle-header {
-    padding: 1rem 1rem;
-    gap: 0.5rem;
-  }
-  .oracle-header-title {
-    font-size: 0.9rem;
-  }
   .oracle-word-display {
-    max-width: 120px;
+    max-width: 150px;
     font-size: 1.3rem;
-  }
-  .new-word-btn {
-    padding: 0.4rem 0.5rem;
-    font-size: 0.8rem;
-  }
-  
-  .petal-number {
-    font-size: 24px;
   }
 
   /* Reduce orbit rings on mobile */
@@ -1559,8 +1539,8 @@ function buildMandala() {
          tabindex="0" role="button" aria-label="Lens ${lens.n}: ${lens.name}">
         <path d="${d}" fill="${col.fill}" stroke="${col.stroke}" stroke-width="0.8" opacity="0.7"
           class="petal-path" id="petal-${i}"/>
-        <text class="petal-number" x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle"
-          fill="${col.stroke}" font-family="'Cormorant Garamond',serif"
+        <text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle"
+          fill="${col.stroke}" font-size="8.5" font-family="'Cormorant Garamond',serif"
           opacity="0.8" pointer-events="none">${lens.n}</text>
       </g>
     `;
