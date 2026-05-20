@@ -16,17 +16,21 @@ fi
 echo "✨ Staging files..."
 git add .
 
-# Commit changes
-echo "💾 Committing changes..."
-git commit -m "Rename application entry to index.html for root page hosting"
+# Commit changes if there are staged changes
+if ! git diff-index --quiet HEAD --; then
+    echo "💾 Committing changes..."
+    git commit -m "Rename application entry to index.html for root page hosting"
+else
+    echo "ℹ️ No new changes to commit."
+fi
 
 # Set branch name to main
 echo "🌿 Ensuring main branch..."
 git branch -M main
 
-# Push to origin
-echo "🚀 Pushing to GitHub..."
-git push -u origin main
+# Push to origin with --force to overwrite the web dummy commit
+echo "🚀 Force pushing to GitHub to sync files..."
+git push -u origin main --force
 
 if [ $? -eq 0 ]; then
     echo "✅ Success! Project successfully updated and pushed."
