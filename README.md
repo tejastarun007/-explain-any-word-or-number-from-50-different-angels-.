@@ -113,14 +113,14 @@ This guarantees all 50 readings feel like genuinely **independent perspectives**
 git clone https://github.com/tejastarun007/-explain-any-word-or-number-from-50-different-angels-..git
 
 # Open the file in your browser
-open aksha-oracle.html
+open index.html
 ```
 That's it. No `npm install`, no build step, no server, no API keys.
 
 ### Option 2: GitHub Pages
 1. Go to your repo's **Settings → Pages**
 2. Set source to **main branch**, root folder
-3. Your oracle will be live at `https://tejastarun007.github.io/-explain-any-word-or-number-from-50-different-angels-./aksha-oracle.html`
+3. Your oracle will be live at `https://tejastarun007.github.io/-explain-any-word-or-number-from-50-different-angels-./`
 
 ---
 
@@ -128,7 +128,7 @@ That's it. No `npm install`, no build step, no server, no API keys.
 
 ```
 .
-├── aksha-oracle.html    # The entire application (HTML + CSS + JS in one file)
+├── index.html           # The entire application (HTML + CSS + JS in one file)
 └── README.md            # This file
 ```
 
