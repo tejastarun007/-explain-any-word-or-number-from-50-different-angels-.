@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKSHA — The Living Word Oracle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+Devanagari:wght@300;400;700&family=Noto+Serif+SC:wght@300;400;700&family=IM+Fell+English:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0704;
+  --bg2: #100c08;
+  --gold: #c9a84c;
+  --gold2: #e8c87a;
+  --gold3: #f5dfa0;
+  --crimson: #8b2020;
+  --crimson2: #c43030;
+  --jade: #1a5c3a;
+  --jade2: #2d9b63;
+  --sapphire: #1a2d5c;
+  --sapphire2: #3a5ea8;
+  --amber: #b06010;
+  --amber2: #e07818;
+  --ink: #f0e6d2;
+  --ink2: #e0d2b6;
+  --ink3: #a89878;
+  --glow: rgba(201,168,76,0.15);
+  --glow2: rgba(201,168,76,0.35);
+  --panel-bg: rgba(16,12,8,0.97);
+  --border: rgba(201,168,76,0.25);
+  --border2: rgba(201,168,76,0.5);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,168,76,0.4); }
+
+/* Dashboard & Search CSS */
+.overview-dashboard {
+  display: flex; gap: 2rem;
+  justify-content: center; flex-wrap: wrap;
+  width: 100%; max-width: 900px;
+  margin: 2rem auto 0;
+  padding: 1.5rem;
+  background: rgba(201,168,76,0.03);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+.overview-dashboard.hidden { display: none; }
+.dash-col { text-align: center; }
+.dash-label {
+  font-family: 'IM Fell English', serif;
+  font-style: italic; font-size: 0.9rem;
+  color: var(--ink3); margin-bottom: 0.4rem;
+}
+.dash-value {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.2rem; color: var(--gold2);
+}
+
+.lens-search {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.4rem 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: var(--ink);
+  outline: none;
+  width: 180px;
+  transition: all 0.3s;
+}
+.lens-search:focus { border-color: var(--gold); width: 220px; background: rgba(201,168,76,0.05); }
+
+/* ── ALTAR SCREEN ── */
+#altar {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at center, #1a1005 0%, #0a0704 70%);
+  background-size: 150% 150%;
+  animation: nebulaPulse 15s ease-in-out infinite;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+@keyframes nebulaPulse { 0%,100% { background-position: 50% 50%; } 50% { background-position: 50% 100%; } }
+
+#altar.fade-out { opacity: 0; transform: scale(1.05); pointer-events: none; }
+
+.altar-glyph {
+  font-size: 11vw;
+  line-height: 1;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 0 40px rgba(201,168,76,0.5));
+  animation: glyphPulse 4s ease-in-out infinite;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform: translateZ(30px);
+  will-change: transform;
+}
+
+@keyframes glyphPulse {
+  0%,100% { filter: drop-shadow(0 0 30px rgba(201,168,76,0.4)); }
+  50% { filter: drop-shadow(0 0 60px rgba(201,168,76,0.7)); }
+}
+
+.altar-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: var(--gold2);
+  text-shadow: 0 0 40px rgba(201,168,76,0.6), 0 0 80px rgba(201,168,76,0.2);
+  margin-bottom: 0.3rem;
+}
+
+.altar-subtitle {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: var(--ink3);
+  letter-spacing: 0.2em;
+  margin-bottom: 3rem;
+}
+
+.altar-scripts {
+  display: flex; gap: 2rem; margin-bottom: 2.5rem;
+  font-size: 1.3rem; color: var(--ink3);
+  opacity: 0.7;
+}
+
+.altar-input-wrap {
+  position: relative;
+  width: min(500px, 90vw);
+}
+
+.altar-input {
+  width: 100%;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 1.1rem 1.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--gold3);
+  text-align: center;
+  outline: none;
+  letter-spacing: 0.1em;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+.altar-input::placeholder { color: var(--ink3); opacity: 0.5; }
+.altar-input:focus {
+  border-color: var(--gold2);
+  background: rgba(201,168,76,0.1);
+  box-shadow: 0 0 30px rgba(201,168,76,0.2), inset 0 0 20px rgba(201,168,76,0.05);
+}
+
+.altar-hint {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--ink3);
+  text-align: center;
+  margin-top: 1.2rem;
+  opacity: 0.6;
+  animation: hintBlink 3s ease-in-out infinite;
+}
+
+@keyframes hintBlink { 0%,100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+
+.altar-examples {
+  display: flex; gap: 0.8rem; flex-wrap: wrap;
+  justify-content: center; margin-top: 1.5rem;
+}
+
+.example-chip {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.example-chip:hover {
+  border-color: var(--gold);
+  color: var(--gold2);
+  background: rgba(201,168,76,0.08);
+}
+
+/* 3D Orbit rings on altar */
+.orbit-wrap {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  transition: transform 0.1s linear;
+}
+.orbit-wrap:nth-child(1) { transform: rotateX(65deg) rotateY(20deg); }
+.orbit-wrap:nth-child(2) { transform: rotateX(75deg) rotateY(-20deg); }
+.orbit-wrap:nth-child(3) { transform: rotateX(80deg) rotateY(10deg); }
+
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.08);
+  animation: orbitSpin linear infinite;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+.orbit-wrap:nth-child(1) .orbit-ring { width: 600px; height: 600px; margin: -300px 0 0 -300px; animation-duration: 60s; border-color: rgba(201,168,76,0.06); }
+.orbit-wrap:nth-child(2) .orbit-ring { width: 800px; height: 800px; margin: -400px 0 0 -400px; animation-duration: 90s; animation-direction: reverse; border-color: rgba(201,168,76,0.04); }
+.orbit-wrap:nth-child(3) .orbit-ring { width: 1100px; height: 1100px; margin: -550px 0 0 -550px; animation-duration: 130s; border-color: rgba(201,168,76,0.03); }
+
+@keyframes orbitSpin { from { transform: rotateZ(0deg); } to { transform: rotateZ(360deg); } }
+
+/* ── ORACLE SCREEN ── */
+#oracle {
+  min-height: 100vh;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+
+#oracle.visible { display: flex; }
+
+/* Header */
+.oracle-header {
+  width: 100%; padding: 1.5rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10,7,4,0.95);
+  backdrop-filter: blur(10px);
+}
+
+.oracle-header-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+}
+
+.oracle-word-display {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold2);
+  text-shadow: 0 0 20px rgba(201,168,76,0.4);
+  letter-spacing: 0.1em;
+}
+
+.oracle-scripts-small {
+  display: flex; gap: 1rem; font-size: 1.1rem; opacity: 0.5;
+}
+
+.new-word-btn {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  color: var(--ink3);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+  letter-spacing: 0.1em;
+}
+.new-word-btn:hover { border-color: var(--gold); color: var(--gold2); }
+
+/* Mandala area */
+.mandala-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem 2rem;
+  position: relative;
+}
+
+.civ-legend {
+  display: flex; gap: 2rem; margin-bottom: 2.5rem;
+  flex-wrap: wrap; justify-content: center;
+}
+
+.civ-badge {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.civ-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* The SVG mandala */
+#mandala-svg {
+  width: min(700px, 95vw);
+  height: min(700px, 95vw);
+  cursor: pointer;
+  filter: drop-shadow(0 0 60px rgba(201,168,76,0.08));
+}
+
+/* Lens grid below */
+.lenses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 1rem 4rem;
+  margin-top: 3rem;
+  border-top: 1px solid var(--border);
+}
+
+.lens-card {
+  background: rgba(16,12,8,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  border: 1px solid rgba(201,168,76,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+
+.lens-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(201,168,76,0.08));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.lens-card:hover { 
+  border-color: rgba(201,168,76,0.3); 
+  background: rgba(16,12,8,0.85); 
+  transform: translateY(-4px); 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+.lens-card:hover::before { opacity: 1; }
+
+.lens-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  color: var(--ink3);
+  opacity: 0.5;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.15em;
+}
+
+.lens-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+  line-height: 1.3;
+}
+
+.lens-civ {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.lens-result {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink2);
+  font-weight: 300;
+  min-height: 4rem;
+}
+
+.lens-loading {
+  color: var(--ink3);
+  font-style: italic;
+  font-size: 0.9rem;
+  opacity: 0.5;
+}
+
+.lens-result .oracle-text { color: var(--gold3); }
+
+.lens-glyph {
+  position: absolute;
+  right: 1rem; bottom: 1rem;
+  font-size: 2.5rem;
+  opacity: 0.06;
+  pointer-events: none;
+  line-height: 1;
+  font-family: 'Noto Serif SC', serif;
+}
+
+/* Civ colors */
+.civ-greek { color: var(--sapphire2); }
+.civ-roman { color: var(--amber2); }
+.civ-vedic { color: var(--crimson2); }
+.civ-chinese { color: var(--jade2); }
+
+.lens-card.civ-greek-card { border-left: 2px solid rgba(58,94,168,0.4); }
+.lens-card.civ-roman-card { border-left: 2px solid rgba(224,120,24,0.4); }
+.lens-card.civ-vedic-card { border-left: 2px solid rgba(196,48,48,0.4); }
+.lens-card.civ-chinese-card { border-left: 2px solid rgba(45,155,99,0.4); }
+
+/* Detail panel (slide-over) */
+#detail-panel {
+  position: fixed;
+  right: 0; top: 0; bottom: 0;
+  width: min(520px, 100vw);
+  background: rgba(16,12,8,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-left: 1px solid var(--border2);
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  padding: 2.5rem 2rem;
+}
+
+#detail-panel.open { transform: translateX(0); }
+
+.panel-close {
+  position: absolute;
+  top: 1.5rem; right: 1.5rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink3);
+  cursor: pointer;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.panel-close:hover { border-color: var(--gold); color: var(--gold2); }
+
+.panel-civ-badge {
+  display: inline-block;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.8rem;
+  border-radius: 2px;
+  margin-bottom: 1rem;
+}
+
+.panel-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4rem;
+  font-weight: 300;
+  color: var(--gold);
+  opacity: 0.3;
+  line-height: 1;
+  margin-bottom: 0;
+}
+
+.panel-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.3rem;
+  color: var(--gold2);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.panel-lens-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
+}
+
+.panel-divider {
+  width: 60px; height: 1px;
+  background: var(--border2);
+  margin-bottom: 1.5rem;
+}
+
+.panel-glyph-large {
+  text-align: center;
+  font-size: 5rem;
+  margin: 1.5rem 0;
+  opacity: 0.4;
+  line-height: 1;
+}
+
+.panel-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  line-height: 1.85;
+  color: var(--ink2);
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+
+.panel-body strong {
+  color: var(--gold3);
+  font-weight: 400;
+}
+
+.panel-etymology {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ink3);
+  line-height: 1.6;
+}
+
+.panel-loading-animation {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  margin: 2rem 0;
+}
+
+.panel-loading-line {
+  height: 1rem;
+  background: rgba(201,168,76,0.08);
+  border-radius: 2px;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.panel-loading-line:nth-child(2) { width: 80%; animation-delay: 0.1s; }
+.panel-loading-line:nth-child(3) { width: 90%; animation-delay: 0.2s; }
+.panel-loading-line:nth-child(4) { width: 70%; animation-delay: 0.3s; }
+
+@keyframes shimmer {
+  0%,100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+.panel-deepen-btn {
+  width: 100%;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  color: var(--gold2);
+  background: rgba(201,168,76,0.08);
+  border: 1px solid var(--border2);
+  padding: 0.9rem;
+  cursor: pointer;
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+  transition: all 0.25s;
+  margin-top: 1rem;
+}
+.panel-deepen-btn:hover { background: rgba(201,168,76,0.15); }
+
+/* Overlay for panel */
+#panel-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 190;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+#panel-overlay.active { opacity: 1; pointer-events: all; }
+
+/* Stars bg */
+.stars {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  width: 1px; height: 1px;
+  background: rgba(201,168,76,0.6);
+  border-radius: 50%;
+  animation: twinkle linear infinite;
+}
+
+@keyframes twinkle {
+  0%,100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.5); }
+}
+
+/* Scroll progress indicator */
+.progress-orb {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  display: none;
+  align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  color: var(--gold);
+  z-index: 60;
+  background: rgba(10,7,4,0.9);
+  cursor: default;
+}
+.progress-orb.visible { display: flex; }
+
+/* Filter tabs */
+.filter-tabs {
+  display: flex; gap: 0.5rem; flex-wrap: wrap;
+  justify-content: center;
+  padding: 1.5rem 1rem 0;
+  max-width: 1400px;
+  width: 100%;
+}
+.filter-tab {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--ink3);
+  background: transparent;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  transition: all 0.2s;
+}
+.filter-tab:hover { border-color: var(--gold); color: var(--gold2); }
+.filter-tab.active { border-color: var(--gold2); color: var(--gold2); background: rgba(201,168,76,0.1); }
+.filter-tab.active.civ-greek-tab { border-color: #3a5ea8; color: #3a5ea8; background: rgba(58,94,168,0.1); }
+.filter-tab.active.civ-roman-tab { border-color: #e07818; color: #e07818; background: rgba(224,120,24,0.1); }
+.filter-tab.active.civ-vedic-tab { border-color: #c43030; color: #c43030; background: rgba(196,48,48,0.1); }
+.filter-tab.active.civ-chinese-tab { border-color: #2d9b63; color: #2d9b63; background: rgba(45,155,99,0.1); }
+.lens-card.hidden { display: none; }
+
+/* Copy button */
+.copy-btn {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  color: var(--ink3);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+  margin-top: 0.8rem;
+  display: inline-block;
+}
+.copy-btn:hover { border-color: var(--gold); color: var(--gold2); }
+
+/* Invoke button */
+.altar-invoke-btn {
+  margin-top: 1.2rem;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  color: var(--gold2);
+  background: rgba(201,168,76,0.08);
+  border: 1px solid var(--border2);
+  padding: 0.7rem 2rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.25s;
+  display: block;
+  width: 100%;
+}
+.altar-invoke-btn:hover { background: rgba(201,168,76,0.18); box-shadow: 0 0 20px rgba(201,168,76,0.2); }
+
+/* Mandala petal animations */
+.petal-path {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform-origin: 350px 350px;
+}
+.petal-path:hover { filter: brightness(1.5) drop-shadow(0 0 4px rgba(201,168,76,0.4)); }
+.petal-group:focus { outline: none; }
+.petal-group:focus .petal-path {
+  filter: brightness(1.5) drop-shadow(0 0 6px rgba(201,168,76,0.6));
+  stroke-width: 1.5;
+}
+
+/* Petal bloom animation */
+.petal-path.petal-bloom {
+  opacity: 0;
+  transform: scale(0.3) rotate(-10deg);
+  transform-origin: 350px 350px;
+  animation: petalBloom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes petalBloom {
+  to { opacity: 0.7; transform: scale(1) rotate(0deg); }
+}
+
+/* Petal tooltip */
+.petal-tooltip {
+  position: fixed;
+  background: rgba(10,7,4,0.95);
+  border: 1px solid var(--border2);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 500;
+  opacity: 0;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.petal-tooltip.show { opacity: 1; }
+.petal-tooltip .tooltip-civ {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+/* center word */
+.mandala-center-word {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.8rem;
+  font-weight: 300;
+  fill: var(--gold2);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+/* Loading state */
+.lens-card.loading .lens-result {
+  background: linear-gradient(90deg, transparent 25%, rgba(201,168,76,0.08) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: cardShimmer 1.5s infinite;
+  border-radius: 2px;
+  min-height: 5rem;
+  color: transparent;
+}
+
+@keyframes cardShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Entrance animation for lens cards */
+.lens-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: lensReveal 0.5s forwards;
+}
+
+@keyframes lensReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TYPEWRITER ANIMATION ── */
+.altar-subtitle .tw-char {
+  opacity: 0;
+  animation: twChar 0.06s forwards;
+}
+@keyframes twChar { to { opacity: 1; } }
+
+/* ── LIVE CHARACTER ANALYSIS ── */
+.live-analysis {
+  display: flex; gap: 1.2rem;
+  justify-content: center; align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+  min-height: 1.6rem;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--ink3);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.live-analysis.active { opacity: 0.8; }
+.live-analysis .la-item {
+  display: flex; align-items: center; gap: 0.3rem;
+}
+.live-analysis .la-value {
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 600;
+}
+.live-analysis .la-glyph {
+  font-size: 1.2rem;
+  transition: all 0.3s;
+}
+
+/* ── HISTORY CHIPS ── */
+.history-section {
+  display: flex; gap: 0.6rem; flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.history-section.active { opacity: 1; }
+.history-label {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--ink3);
+  opacity: 0.5;
+  align-self: center;
+  margin-right: 0.3rem;
+}
+.history-chip {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 2px;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(201,168,76,0.03);
+}
+.history-chip:hover {
+  border-color: var(--gold);
+  color: var(--gold2);
+  background: rgba(201,168,76,0.08);
+}
+
+/* ── PARTICLE BURST ── */
+.particle {
+  position: fixed;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999;
+  animation: particleFly 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+@keyframes particleFly {
+  0% { opacity: 1; transform: translate(0,0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--px), var(--py)) scale(0); }
+}
+
+/* ── PROGRESS ARC (SVG) ── */
+.progress-ring {
+  width: 100%; height: 100%;
+  transform: rotate(-90deg);
+}
+.progress-ring .track {
+  fill: none;
+  stroke: rgba(201,168,76,0.15);
+  stroke-width: 2;
+}
+.progress-ring .fill {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.15s ease;
+}
+
+/* ── LONG WORD OVERFLOW ── */
+.oracle-word-display {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── SHARE BUTTON ── */
+.share-btn {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  color: var(--ink3);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  display: inline-block;
+}
+.share-btn:hover { border-color: var(--gold); color: var(--gold2); }
+
+/* ── ACCORDION EXPAND ── */
+.lens-card .lens-expand-btn {
+  position: absolute;
+  top: 0.8rem; right: 0.8rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink3);
+  cursor: pointer;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  opacity: 0;
+  z-index: 5;
+}
+.lens-card:hover .lens-expand-btn { opacity: 1; }
+.lens-expand-btn:hover { border-color: var(--gold); color: var(--gold2); }
+.lens-card.expanded {
+  grid-column: 1 / -1;
+  max-width: 900px;
+  border-color: var(--border2) !important;
+  background: rgba(16,12,8,0.95);
+}
+.lens-card.expanded .lens-result {
+  max-height: none;
+  font-size: 1.1rem;
+  line-height: 1.9;
+}
+.lens-card.expanded .lens-expand-btn { opacity: 1; }
+
+/* ── SORT/GROUP TOGGLE ── */
+.view-toggle {
+  display: flex; gap: 0.5rem;
+  align-items: center;
+  margin-left: auto;
+  padding-right: 1rem;
+}
+.view-toggle-btn {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--ink3);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.view-toggle-btn:hover { border-color: var(--gold); color: var(--gold2); }
+.view-toggle-btn.active { border-color: var(--gold2); color: var(--gold2); background: rgba(201,168,76,0.1); }
+
+/* Group view section headers */
+.group-header {
+  grid-column: 1 / -1;
+  padding: 1.5rem 1rem 0.5rem;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: -1px;
+}
+
+/* ── SCROLL HIGHLIGHT ── */
+.lens-card.scroll-highlight {
+  animation: scrollPulse 1.5s ease;
+}
+@keyframes scrollPulse {
+  0% { box-shadow: 0 0 0 0 rgba(201,168,76,0.5); }
+  50% { box-shadow: 0 0 20px 5px rgba(201,168,76,0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+}
+
+/* ── MOBILE IMPROVEMENTS ── */
+@media (max-width: 500px) {
+  /* Mobile mandala: show simplified ring instead of 50 tiny petals */
+  #mandala-svg { width: 95vw; height: auto; }
+
+  /* Altar mobile spacing */
+  .altar-glyph { margin-bottom: 1rem; font-size: 15vw; }
+  .altar-subtitle { margin-bottom: 1.5rem; }
+  .altar-scripts { 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 1rem; 
+    margin-bottom: 1.5rem; 
+    font-size: 1.1rem;
+  }
+  .altar-input { 
+    padding: 0.8rem 1rem; 
+    font-size: 1.2rem; 
+  }
+  .altar-examples { margin-top: 1rem; gap: 0.4rem; }
+  .example-chip { font-size: 0.85rem; padding: 0.2rem 0.6rem; }
+  .live-analysis { gap: 0.8rem; margin-top: 0.5rem; }
+
+  /* Mobile panel: full-screen with swipe bar */
+  #detail-panel {
+    width: 100vw;
+    border-left: none;
+    border-top: 1px solid var(--border2);
+    padding-top: 1rem;
+  }
+  .panel-swipe-bar {
+    display: block !important;
+    width: 40px; height: 4px;
+    background: var(--ink3);
+    border-radius: 2px;
+    margin: 0 auto 1rem;
+    opacity: 0.5;
+  }
+  .panel-mobile-close {
+    display: flex !important;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    padding: 1rem;
+    background: var(--panel-bg);
+    border-top: 1px solid var(--border);
+    justify-content: center;
+    z-index: 10;
+  }
+  .panel-mobile-close button {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--gold2);
+    background: rgba(201,168,76,0.08);
+    border: 1px solid var(--border2);
+    padding: 0.7rem 2rem;
+    cursor: pointer;
+    border-radius: 2px;
+    width: 100%;
+  }
+
+  .oracle-word-display {
+    max-width: 150px;
+    font-size: 1.3rem;
+  }
+
+  /* Reduce orbit rings on mobile */
+  .orbit-ring:nth-child(1) { width: 300px; height: 300px; }
+  .orbit-ring:nth-child(2) { width: 420px; height: 420px; }
+  .orbit-ring:nth-child(3) { width: 560px; height: 560px; }
+}
+
+/* Hide mobile-only elements on desktop */
+.panel-swipe-bar { display: none; }
+.panel-mobile-close { display: none; }
+
+/* ── AUTO-DETECT: number highlight ── */
+.auto-detect-badge {
+  display: inline-block;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.auto-detect-badge.is-number {
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--border);
+  color: var(--gold);
+}
+.auto-detect-badge.is-word {
+  background: rgba(58,94,168,0.08);
+  border: 1px solid rgba(58,94,168,0.3);
+  color: var(--sapphire2);
+}
+
+/* Numerology-relevant cards glow for number input */
+.lens-card.auto-highlight {
+  border-color: var(--gold) !important;
+  box-shadow: inset 0 0 15px rgba(201,168,76,0.05);
+}
+
+.typing-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: var(--gold2);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particleFade 1s ease-out forwards;
+}
+@keyframes particleFade {
+  0% { transform: scale(1) translate(0,0); opacity: 1; filter: blur(0px); }
+  100% { transform: scale(0) translate(var(--dx), var(--dy)); opacity: 0; filter: blur(2px); }
+}
+
+.altar-invoke-btn, .example-chip, .history-chip {
+  will-change: transform;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.25s, box-shadow 0.25s, border-color 0.2s !important;
+}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- ── ALTAR ── -->
+<div id="altar">
+  <div class="orbit-wrap"><div class="orbit-ring"></div></div>
+  <div class="orbit-wrap"><div class="orbit-ring"></div></div>
+  <div class="orbit-wrap"><div class="orbit-ring"></div></div>
+
+  <div class="altar-glyph">अ</div>
+  <div class="altar-title">AKSHA</div>
+  <div class="altar-subtitle" id="altarSubtitle">The Living Word Oracle</div>
+
+  <div class="altar-scripts">
+    <span>Α α</span><span>·</span>
+    <span>अ क्ष</span><span>·</span>
+    <span>文 字</span><span>·</span>
+    <span>L I T T E R A</span>
+  </div>
+
+  <div class="altar-input-wrap">
+    <input
+      class="altar-input"
+      id="wordInput"
+      type="text"
+      placeholder="Enter a word or number…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <div class="live-analysis" id="liveAnalysis">
+      <span class="la-item"><span class="la-value" id="laLetters">—</span> letters</span>
+      <span class="la-item">root <span class="la-value" id="laRoot">—</span></span>
+      <span class="la-item"><span class="la-value" id="laVowels">—</span>V <span class="la-value" id="laCons">—</span>C</span>
+      <span class="la-item la-glyph" id="laGlyph">·</span>
+    </div>
+    <button class="altar-invoke-btn" id="invokeBtn">⟳ Invoke the Oracle</button>
+    <div class="altar-hint">Press Enter or tap Invoke</div>
+    <div class="altar-examples">
+      <button class="example-chip" onclick="setExample('7')">7</button>
+      <button class="example-chip" onclick="setExample('Fire')">Fire</button>
+      <button class="example-chip" onclick="setExample('Dharma')">Dharma</button>
+      <button class="example-chip" onclick="setExample('Logos')">Logos</button>
+      <button class="example-chip" onclick="setExample('Water')">Water</button>
+      <button class="example-chip" onclick="setExample('Om')">Om</button>
+      <button class="example-chip" onclick="setExample('108')">108</button>
+      <button class="example-chip" onclick="setExample('Truth')">Truth</button>
+    </div>
+    <div class="history-section" id="historySection">
+      <span class="history-label">Recent:</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── ORACLE SCREEN ── -->
+<div id="oracle">
+  <div class="oracle-header">
+    <div class="oracle-header-title">AKSHA</div>
+    <div class="oracle-word-display" id="headerWord">—</div>
+    <button class="new-word-btn" onclick="resetOracle()">⟳ New Word</button>
+  </div>
+
+  <div class="mandala-section">
+    <div class="civ-legend">
+      <div class="civ-badge"><div class="civ-dot" style="background:#3a5ea8"></div><span style="color:#3a5ea8">Hellenic</span></div>
+      <div class="civ-badge"><div class="civ-dot" style="background:#e07818"></div><span style="color:#e07818">Roman</span></div>
+      <div class="civ-badge"><div class="civ-dot" style="background:#c43030"></div><span style="color:#c43030">Vedic</span></div>
+      <div class="civ-badge"><div class="civ-dot" style="background:#2d9b63"></div><span style="color:#2d9b63">Sinitic</span></div>
+    </div>
+
+    <svg id="mandala-svg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Oracle mandala — click any petal to explore a lens">
+      <defs>
+        <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#1a1005" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#0a0704" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glowStrong">
+          <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Background -->
+      <circle cx="350" cy="350" r="340" fill="url(#bgGrad)"/>
+
+      <!-- Ring guides -->
+      <circle cx="350" cy="350" r="300" fill="none" stroke="rgba(201,168,76,0.06)" stroke-width="0.5"/>
+      <circle cx="350" cy="350" r="240" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="0.5"/>
+      <circle cx="350" cy="350" r="180" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="0.5"/>
+      <circle cx="350" cy="350" r="120" fill="none" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+
+      <!-- Petals rendered by JS -->
+      <g id="petals-group"></g>
+
+      <!-- Center circle -->
+      <circle cx="350" cy="350" r="110" fill="#0a0704" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+      <circle cx="350" cy="350" r="102" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <circle cx="350" cy="350" r="94" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="0.5"/>
+
+      <!-- Center word -->
+      <text id="mandala-word" x="350" y="340" text-anchor="middle" dominant-baseline="middle"
+        fill="#c9a84c" font-family="'Cormorant Garamond', serif" font-style="italic"
+        font-size="28" font-weight="300">—</text>
+      <text id="mandala-scripts" x="350" y="372" text-anchor="middle" dominant-baseline="middle"
+        fill="rgba(201,168,76,0.4)" font-family="'Noto Serif SC', serif"
+        font-size="14">·</text>
+
+      <!-- Cardinal markers -->
+      <text x="350" y="28" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="12" font-family="'Cormorant Garamond', serif">N</text>
+      <text x="350" y="682" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="12" font-family="'Cormorant Garamond', serif">S</text>
+      <text x="22" y="354" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="12" font-family="'Cormorant Garamond', serif">W</text>
+      <text x="678" y="354" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="12" font-family="'Cormorant Garamond', serif">E</text>
+    </svg>
+
+    <div style="font-family:'IM Fell English',serif; font-style:italic; font-size:0.9rem; color:var(--ink3); opacity:0.5; margin-top:1rem;">
+      Click any petal to open its lens · Scroll down for all 50
+    </div>
+  </div>
+
+  <!-- At a Glance Dashboard -->
+  <div class="overview-dashboard hidden" id="overviewDashboard">
+    <div class="dash-col">
+      <div class="dash-label">Elemental Resonance</div>
+      <div class="dash-value" id="dashElement">—</div>
+    </div>
+    <div class="dash-col">
+      <div class="dash-label">Numerical Root</div>
+      <div class="dash-value" id="dashNumber">—</div>
+    </div>
+    <div class="dash-col">
+      <div class="dash-label">Polarity Bias</div>
+      <div class="dash-value" id="dashPolarity">—</div>
+    </div>
+  </div>
+
+  <!-- Filter tabs + view toggle + search -->
+  <div class="filter-tabs" id="filterTabs">
+    <input type="text" class="lens-search" id="lensSearch" placeholder="Search lenses..." autocomplete="off">
+    <button class="filter-tab active" data-civ="all" onclick="filterLenses('all',this)">All 50</button>
+    <button class="filter-tab civ-greek-tab" data-civ="greek" onclick="filterLenses('greek',this)">Hellenic</button>
+    <button class="filter-tab civ-roman-tab" data-civ="roman" onclick="filterLenses('roman',this)">Roman</button>
+    <button class="filter-tab civ-vedic-tab" data-civ="vedic" onclick="filterLenses('vedic',this)">Vedic</button>
+    <button class="filter-tab civ-chinese-tab" data-civ="chinese" onclick="filterLenses('chinese',this)">Sinitic</button>
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" id="gridViewBtn" onclick="setViewMode('grid')">▦ Grid</button>
+      <button class="view-toggle-btn" id="groupViewBtn" onclick="setViewMode('group')">☰ Grouped</button>
+    </div>
+  </div>
+
+  <!-- All 50 lens cards -->
+  <div class="lenses-grid" id="lensesGrid"></div>
+</div>
+
+<!-- Detail Panel -->
+<div id="panel-overlay" onclick="closePanel()"></div>
+<div id="detail-panel">
+  <div class="panel-swipe-bar" id="panelSwipeBar"></div>
+  <button class="panel-close" onclick="closePanel()">✕</button>
+  <div id="panel-content"></div>
+  <div class="panel-mobile-close"><button onclick="closePanel()">✕ Close</button></div>
+</div>
+
+<!-- Petal tooltip -->
+<div class="petal-tooltip" id="petalTooltip"></div>
+
+<div class="progress-orb" id="progressOrb">
+  <svg class="progress-ring" viewBox="0 0 48 48">
+    <circle class="track" cx="24" cy="24" r="20"/>
+    <circle class="fill" cx="24" cy="24" r="20" id="progressArc" stroke-dasharray="125.66" stroke-dashoffset="125.66"/>
+  </svg>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+
+const LENSES = [
+  // HELLENIC (12)
+  { n:1,  civ:'greek',  name:'Etymology & Root Meaning',        glyph:'Ε',  glyphFont:'serif' },
+  { n:2,  civ:'greek',  name:'Platonic Form / Ideal Archetype', glyph:'Φ',  glyphFont:'serif' },
+  { n:3,  civ:'greek',  name:'Mythological Deity Association',  glyph:'Θ',  glyphFont:'serif' },
+  { n:4,  civ:'greek',  name:'Delphic Oracle Interpretation',   glyph:'Δ',  glyphFont:'serif' },
+  { n:5,  civ:'greek',  name:'Pythagorean Numerology',          glyph:'Π',  glyphFont:'serif' },
+  { n:6,  civ:'greek',  name:'Aristotelian Category',           glyph:'Λ',  glyphFont:'serif' },
+  { n:7,  civ:'greek',  name:'Homeric Epithet / Kenning',       glyph:'Η',  glyphFont:'serif' },
+  { n:8,  civ:'greek',  name:'Stoic Virtue Mapping',            glyph:'Σ',  glyphFont:'serif' },
+  { n:9,  civ:'greek',  name:'Socratic Negation',               glyph:'Ω',  glyphFont:'serif' },
+  { n:10, civ:'greek',  name:'Heraclitean Flux',                glyph:'Χ',  glyphFont:'serif' },
+  { n:11, civ:'greek',  name:'Sacred Geometry Correspondence',  glyph:'Γ',  glyphFont:'serif' },
+  { n:12, civ:'greek',  name:'Greek Gematria Value',            glyph:'Ξ',  glyphFont:'serif' },
+  // ROMAN (10)
+  { n:13, civ:'roman',  name:'Latin Translation & Legal Usage', glyph:'L',  glyphFont:'serif' },
+  { n:14, civ:'roman',  name:'Roman Deity / Genius Loci',       glyph:'R',  glyphFont:'serif' },
+  { n:15, civ:'roman',  name:'Augury & Omen Reading',           glyph:'A',  glyphFont:'serif' },
+  { n:16, civ:'roman',  name:'Republican Virtue',               glyph:'V',  glyphFont:'serif' },
+  { n:17, civ:'roman',  name:'Calendar & Festival Association', glyph:'C',  glyphFont:'serif' },
+  { n:18, civ:'roman',  name:'Military Metaphor',               glyph:'M',  glyphFont:'serif' },
+  { n:19, civ:'roman',  name:'Architectural Allegory',          glyph:'I',  glyphFont:'serif' },
+  { n:20, civ:'roman',  name:'Stoic-Roman Maxim',               glyph:'S',  glyphFont:'serif' },
+  { n:21, civ:'roman',  name:'Imperial Symbol & Sigil',         glyph:'X',  glyphFont:'serif' },
+  { n:22, civ:'roman',  name:'Roman Numeral Power',             glyph:'N',  glyphFont:'serif' },
+  // VEDIC (18)
+  { n:23, civ:'vedic',  name:'Sanskrit Root & Vibration',       glyph:'अ',  glyphFont:'devanagari' },
+  { n:24, civ:'vedic',  name:'Mantra & Bīja Syllable',          glyph:'ॐ',  glyphFont:'devanagari' },
+  { n:25, civ:'vedic',  name:'Chakra Correspondence',           glyph:'◉',  glyphFont:'serif' },
+  { n:26, civ:'vedic',  name:'Tattva — Elemental Mapping',      glyph:'त',  glyphFont:'devanagari' },
+  { n:27, civ:'vedic',  name:'Deity (Deva / Devī) Association', glyph:'श्री', glyphFont:'devanagari' },
+  { n:28, civ:'vedic',  name:'Sahasranāma — The 1000 Names',    glyph:'ह',  glyphFont:'devanagari' },
+  { n:29, civ:'vedic',  name:'Yantra & Geometric Form',         glyph:'◈',  glyphFont:'serif' },
+  { n:30, civ:'vedic',  name:'Āyurvedic Dosha Quality',         glyph:'व',  glyphFont:'devanagari' },
+  { n:31, civ:'vedic',  name:'Jyotiṣa — Vedic Astrology',       glyph:'ग्र', glyphFont:'devanagari' },
+  { n:32, civ:'vedic',  name:'Vedic Ṛca — Hymn Reference',      glyph:'ऋ',  glyphFont:'devanagari' },
+  { n:33, civ:'vedic',  name:'Upaniṣadic Concept',              glyph:'ब्र', glyphFont:'devanagari' },
+  { n:34, civ:'vedic',  name:'Purāṇic Story & Allegory',        glyph:'क',  glyphFont:'devanagari' },
+  { n:35, civ:'vedic',  name:'Tantric Polarity — Śiva/Śakti',   glyph:'⊕',  glyphFont:'serif' },
+  { n:36, civ:'vedic',  name:'Yoga Path Connection',            glyph:'य',  glyphFont:'devanagari' },
+  { n:37, civ:'vedic',  name:'Philosophical School (Darśana)',   glyph:'द',  glyphFont:'devanagari' },
+  { n:38, civ:'vedic',  name:'Dharmaśāstra — Sacred Law',        glyph:'ध',  glyphFont:'devanagari' },
+  { n:39, civ:'vedic',  name:'Nāda — Sound & Rāga Connection',  glyph:'न',  glyphFont:'devanagari' },
+  { n:40, civ:'vedic',  name:'Vedic Mathematics Sutra',         glyph:'म',  glyphFont:'devanagari' },
+  // SINITIC (10)
+  { n:41, civ:'chinese',name:'Classical Character & Strokes',   glyph:'字',  glyphFont:'chinese' },
+  { n:42, civ:'chinese',name:'I Ching Hexagram Resonance',      glyph:'☯',  glyphFont:'serif' },
+  { n:43, civ:'chinese',name:'Five Elements — Wu Xing',         glyph:'五',  glyphFont:'chinese' },
+  { n:44, civ:'chinese',name:'Yin / Yang Axis',                 glyph:'陰',  glyphFont:'chinese' },
+  { n:45, civ:'chinese',name:'Bagua — Eight Trigrams',          glyph:'卦',  glyphFont:'chinese' },
+  { n:46, civ:'chinese',name:'Confucian Virtue',                glyph:'仁',  glyphFont:'chinese' },
+  { n:47, civ:'chinese',name:'Daoist Principle',                glyph:'道',  glyphFont:'chinese' },
+  { n:48, civ:'chinese',name:'TCM Meridian & Organ System',     glyph:'氣',  glyphFont:'chinese' },
+  { n:49, civ:'chinese',name:'Chinese Numerology',              glyph:'數',  glyphFont:'chinese' },
+  { n:50, civ:'chinese',name:'Celestial Stem / Earthly Branch', glyph:'天',  glyphFont:'chinese' },
+];
+
+const CIV_COLORS = {
+  greek:   { stroke:'#3a5ea8', fill:'rgba(58,94,168,0.15)',   hover:'rgba(58,94,168,0.3)'  },
+  roman:   { stroke:'#e07818', fill:'rgba(224,120,24,0.15)',  hover:'rgba(224,120,24,0.3)' },
+  vedic:   { stroke:'#c43030', fill:'rgba(196,48,48,0.15)',   hover:'rgba(196,48,48,0.3)'  },
+  chinese: { stroke:'#2d9b63', fill:'rgba(45,155,99,0.15)',   hover:'rgba(45,155,99,0.3)'  },
+};
+
+const CIV_LABEL = { greek:'Hellenic', roman:'Roman', vedic:'Vedic–Sanskrit', chinese:'Sinitic' };
+
+let currentWord = '';
+let lensResults = {};
+let panelLens = null;
+
+// ── STARS & PARALLAX ──────────────────────────────────────────────────
+function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${Math.random()*100}%;
+      width: ${Math.random() > 0.8 ? 2 : 1}px;
+      height: ${Math.random() > 0.8 ? 2 : 1}px;
+      animation-duration: ${3 + Math.random()*7}s;
+      animation-delay: ${Math.random()*5}s;
+      opacity: ${0.1 + Math.random()*0.4};
+    `;
+    container.appendChild(star);
+  }
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (document.getElementById('altar').style.display === 'none') return;
+  const dx = (e.clientX / window.innerWidth - 0.5) * 20;
+  const dy = (e.clientY / window.innerHeight - 0.5) * 20;
+  document.querySelectorAll('.orbit-ring').forEach((r, i) => {
+    r.style.transform = `translate(${dx*(i+1)*0.5}px, ${dy*(i+1)*0.5}px)`;
+  });
+});
+
+// ── MANDALA ─────────────────────────────────────────────────────────────
+function buildMandala() {
+  const svg = document.getElementById('petals-group');
+  const cx = 350, cy = 350;
+  const total = 50;
+  const innerR = 120, outerR = 295;
+
+  let html = '';
+  LENSES.forEach((lens, i) => {
+    const angle = (i / total) * 360 - 90;
+    const nextAngle = ((i+1) / total) * 360 - 90;
+    const midAngle = (angle + nextAngle) / 2;
+    const a1 = angle * Math.PI / 180;
+    const a2 = nextAngle * Math.PI / 180;
+    const col = CIV_COLORS[lens.civ];
+
+    // Outer arc
+    const x1o = cx + outerR * Math.cos(a1);
+    const y1o = cy + outerR * Math.sin(a1);
+    const x2o = cx + outerR * Math.cos(a2);
+    const y2o = cy + outerR * Math.sin(a2);
+    // Inner arc
+    const x1i = cx + innerR * Math.cos(a1);
+    const y1i = cy + innerR * Math.sin(a1);
+    const x2i = cx + innerR * Math.cos(a2);
+    const y2i = cy + innerR * Math.sin(a2);
+
+    const d = `M ${x1i} ${y1i} L ${x1o} ${y1o} A ${outerR} ${outerR} 0 0 1 ${x2o} ${y2o} L ${x2i} ${y2i} A ${innerR} ${innerR} 0 0 0 ${x1i} ${y1i} Z`;
+
+    // Number label
+    const labelR = (innerR + outerR) / 2;
+    const lMid = midAngle * Math.PI / 180;
+    const lx = cx + labelR * Math.cos(lMid);
+    const ly = cy + labelR * Math.sin(lMid);
+
+    html += `
+      <g class="petal-group" data-lens="${i}" onclick="handlePetalClick(${i})"
+         onmouseenter="showTooltip(event, ${i})" onmouseleave="hideTooltip()" onmousemove="moveTooltip(event)"
+         tabindex="0" role="button" aria-label="Lens ${lens.n}: ${lens.name}">
+        <path d="${d}" fill="${col.fill}" stroke="${col.stroke}" stroke-width="0.8" opacity="0.7"
+          class="petal-path" id="petal-${i}"/>
+        <text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle"
+          fill="${col.stroke}" font-size="8.5" font-family="'Cormorant Garamond',serif"
+          opacity="0.8" pointer-events="none">${lens.n}</text>
+      </g>
+    `;
+  });
+
+  svg.innerHTML = html;
+}
+
+function showTooltip(e, i) {
+  const t = document.getElementById('petalTooltip');
+  const lens = LENSES[i];
+  const col = CIV_COLORS[lens.civ];
+  t.innerHTML = `<span class="tooltip-civ" style="background:${col.stroke}"></span>Lens ${lens.n}: ${lens.name}`;
+  t.classList.add('show');
+  moveTooltip(e);
+}
+function moveTooltip(e) {
+  const t = document.getElementById('petalTooltip');
+  t.style.left = (e.clientX + 15) + 'px';
+  t.style.top = (e.clientY + 15) + 'px';
+}
+function hideTooltip() { document.getElementById('petalTooltip').classList.remove('show'); }
+
+function handlePetalClick(i) {
+  hideTooltip();
+  const card = document.getElementById(`lens-card-${i}`);
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('scroll-highlight');
+    setTimeout(() => card.classList.remove('scroll-highlight'), 1500);
+  }
+  setTimeout(() => openPanel(i), 400);
+}
+
+// ── LENS CARDS ──────────────────────────────────────────────────────────
+function buildLensCards() {
+  const grid = document.getElementById('lensesGrid');
+  grid.innerHTML = '';
+  const isNumber = !isNaN(parseInt(currentWord)) && currentWord.trim() !== '' && !/[a-zA-Z]/.test(currentWord);
+
+  let currentCiv = null;
+  
+  LENSES.forEach((lens, i) => {
+    // Add group header if needed
+    if (document.getElementById('groupViewBtn').classList.contains('active') && lens.civ !== currentCiv) {
+      currentCiv = lens.civ;
+      const header = document.createElement('div');
+      header.className = `group-header civ-${currentCiv}-card`;
+      header.style.color = CIV_COLORS[currentCiv].stroke;
+      header.textContent = CIV_LABEL[currentCiv] + ' Tradition';
+      grid.appendChild(header);
+    }
+
+    const card = document.createElement('div');
+    card.className = `lens-card civ-${lens.civ}-card`;
+    card.id = `lens-card-${i}`;
+    card.style.animationDelay = `${i * 0.03}s`;
+    
+    // Auto-highlight numerology lenses if input is number
+    const isNumLens = [5, 12, 22, 40, 49].includes(lens.n);
+    if (isNumber && isNumLens) {
+      card.classList.add('auto-highlight');
+    }
+
+    const resultHTML = lensResults[i] 
+      ? lensResults[i].replace(new RegExp(`(${currentWord})`, 'gi'), `<span class="oracle-text">$1</span>`)
+      : `<span style="opacity:0.4; font-style:italic; font-size:0.9rem">Consulting the oracle…</span>`;
+    const loadingClass = lensResults[i] ? '' : 'lens-loading';
+    const textColor = lensResults[i] ? 'style="color: var(--ink2)"' : '';
+
+    card.innerHTML = `
+      <button class="lens-expand-btn" onclick="toggleExpand(event, ${i})">▼</button>
+      <div class="lens-number">${String(lens.n).padStart(2,'0')} / 50</div>
+      <div class="lens-name">${lens.name}</div>
+      <div class="lens-civ civ-${lens.civ}">${CIV_LABEL[lens.civ]}</div>
+      <div class="lens-result ${loadingClass}" id="lens-result-${i}" ${textColor}>
+        ${resultHTML}
+      </div>
+      <div class="lens-glyph">${lens.glyph}</div>
+    `;
+    card.onclick = () => openPanel(i);
+    grid.appendChild(card);
+  });
+}
+
+function toggleExpand(e, i) {
+  e.stopPropagation();
+  const card = document.getElementById(`lens-card-${i}`);
+  card.classList.toggle('expanded');
+  e.target.textContent = card.classList.contains('expanded') ? '▲' : '▼';
+}
+
+function setViewMode(mode) {
+  document.getElementById('gridViewBtn').classList.toggle('active', mode === 'grid');
+  document.getElementById('groupViewBtn').classList.toggle('active', mode === 'group');
+  if (currentWord) buildLensCards();
+}
+
+// ── OFFLINE ORACLE ENGINE ────────────────────────────────────────────────
+const ELEM={greek:['Fire','Water','Air','Earth','Aether'],roman:['Ignis','Aqua','Aer','Terra','Aether'],vedic:['Agni','Jala','Vāyu','Pṛthvī','Ākāśa'],chinese:['Wood','Fire','Earth','Metal','Water']};
+const DEITY={greek:['Zeus','Hera','Apollo','Athena','Hermes','Aphrodite','Ares','Poseidon','Dionysus'],roman:['Jupiter','Juno','Sol','Minerva','Mercury','Venus','Mars','Neptune','Bacchus'],vedic:['Brahmā','Sarasvatī','Sūrya','Gaṇeśa','Viṣṇu','Lakṣmī','Śiva','Varuṇa','Indra']};
+const CHAKRAS=['Mūlādhāra','Svādhiṣṭhāna','Maṇipūra','Anāhata','Viśuddha','Ājñā','Sahasrāra'];
+const CHAKRA_DOMAINS=['physical survival and earth-grounding','creative pleasure and fluid motion','personal will and solar fire','universal love and heart-integration','authentic truth and vocal resonance','inner vision and intuitive clarity','cosmic unity and transcendent awareness'];
+const WUXING=['Wood (木)','Fire (火)','Earth (土)','Metal (金)','Water (水)'];
+const WUXING_Q={'Wood (木)':'growth and upward force','Fire (火)':'transformation and brilliance','Earth (土)':'nourishment and centering','Metal (金)':'refinement and clarity','Water (水)':'depth and adaptive flow'};
+const BAGUA=['☰ Qián (Heaven)','☷ Kūn (Earth)','☳ Zhèn (Thunder)','☴ Xùn (Wind)','☵ Kǎn (Water)','☲ Lí (Fire)','☶ Gèn (Mountain)','☱ Duì (Lake)'];
+const ICHING=['乾 Qián (Heaven)','坤 Kūn (Earth)','屯 Zhūn (Difficulty)','蒙 Méng (Folly)','需 Xū (Waiting)','訟 Sòng (Conflict)','師 Shī (Army)','比 Bǐ (Union)','小畜 Xiǎo Chù (Restraint)','履 Lǚ (Conduct)','泰 Tài (Peace)','否 Pǐ (Stagnation)','同人 Tóng Rén (Fellowship)','大有 Dà Yǒu (Abundance)','謙 Qiān (Modesty)','豫 Yù (Enthusiasm)','隨 Suí (Following)','蠱 Gǔ (Decay)','臨 Lín (Approach)','觀 Guān (Contemplation)','噬嗑 Shì Kè (Breakthrough)','賁 Bì (Grace)','剝 Bō (Splitting)','復 Fù (Return)','無妄 Wú Wàng (Innocence)','大畜 Dà Chù (Taming)','頤 Yí (Nourishment)','大過 Dà Guò (Excess)','坎 Kǎn (Abyss)','離 Lí (Clinging)','咸 Xián (Influence)','恒 Héng (Duration)','遯 Dùn (Retreat)','大壯 Dà Zhuàng (Power)','晉 Jìn (Progress)','明夷 Míng Yí (Darkness)','家人 Jiā Rén (Family)','睽 Kuí (Opposition)','蹇 Jiǎn (Obstruction)','解 Jiě (Deliverance)','損 Sǔn (Decrease)','益 Yì (Increase)','夬 Guài (Breakthrough)','姤 Gòu (Meeting)','萃 Cuì (Gathering)','升 Shēng (Rising)','困 Kùn (Oppression)','井 Jǐng (Well)','革 Gé (Revolution)','鼎 Dǐng (Cauldron)','震 Zhèn (Thunder)','艮 Gèn (Mountain)','漸 Jiàn (Development)','歸妹 Guī Mèi (Maiden)','豐 Fēng (Fullness)','旅 Lǚ (Wandering)','巽 Xùn (Wind)','兌 Duì (Joy)','渙 Huàn (Dispersion)','節 Jié (Limitation)','中孚 Zhōng Fú (Truth)','小過 Xiǎo Guò (Small Excess)','既濟 Jì Jì (Completion)','未濟 Wèi Jì (Before Completion)'];
+const PLANETS=['Sūrya (Sun)','Candra (Moon)','Budha (Mercury)','Śukra (Venus)','Maṅgala (Mars)','Guru (Jupiter)','Śani (Saturn)','Rāhu','Ketu'];
+const DOSHA=['Vāta (air & space)','Pitta (fire & water)','Kapha (earth & water)'];
+const YOGA=['Jñāna','Bhakti','Karma','Rāja','Tantra','Mantra'];
+const DARSHANA=['Nyāya','Vaiśeṣika','Sāṃkhya','Yoga','Mīmāṃsā','Vedānta'];
+const UPANISHAD=['Bṛhadāraṇyaka','Chāndogya','Taittirīya','Kena','Kaṭha','Muṇḍaka','Māṇḍūkya'];
+const NAKSHATRA=['Aśvinī','Bharaṇī','Kṛttikā','Rohiṇī','Mṛgaśīrā','Ārdrā','Punarvasū','Puṣya','Āśleṣā','Maghā','Pūrva Phālgunī','Hasta','Citrā','Svātī','Viśākhā','Anurādhā','Jyeṣṭhā','Mūla','Śravaṇa','Dhaniṣṭhā','Revatī'];
+const STOIC_V=['prudentia (practical wisdom)','iustitia (justice)','fortitudo (courage)','temperantia (temperance)'];
+const ROMAN_V=['Virtus','Pietas','Gravitas','Dignitas','Auctoritas','Fides'];
+const CONFUCIAN=['Rén 仁 (benevolence)','Yì 義 (righteousness)','Lǐ 禮 (propriety)','Zhì 智 (wisdom)','Xìn 信 (faithfulness)','Zhōng 忠 (loyalty)'];
+const DAOIST=['Wú Wéi 無為 (non-action)','Zì Rán 自然 (naturalness)','Pǔ 樸 (simplicity)','Qīng Jìng 清靜 (stillness)'];
+const MERIDIAN=['Lung (Tài Yīn)','Large Intestine (Yáng Míng)','Stomach (Yáng Míng)','Spleen (Tài Yīn)','Heart (Shào Yīn)','Small Intestine (Tài Yáng)','Kidney (Shào Yīn)','Liver (Jué Yīn)'];
+const EPITHETS=['the far-seeing','the cloud-gatherer','the fleet-footed','the many-counselled','the grey-eyed','the rosy-fingered','the wine-dark','the loud-thundering'];
+const ROMAN_FEST=['Saturnalia','Lupercalia','Floralia','Parentalia','Lemuria','Agonalia'];
+const ROMAN_MIL=['the testudo formation','the legion manipular','the triumph','the aquila standard'];
+const ARCH_FORMS=['the Roman arch','the forum basilica','the Pantheon oculus','the aqueduct','the triumphal arch'];
+const GEOM=['the vesica piscis','the golden spiral','the Flower of Life','the tetrahedron','the Sri Yantra','the Metatron\'s Cube'];
+const PIE_ROOTS=['*pyr (fire)','*aqu (water)','*dʰewbʰ (depth)','*wer (speak/ward)','*bʰer (carry/bear)','*ǵneh₃ (know)','*lewk (light)','*mer (sea/death)','*sol (whole)','*dheh₁ (place/do)'];
+const PURANIC=['the churning of the cosmic ocean','the descent of Viṣṇu','the dance of Śiva at Cidambaram','the battle of Kurukṣetra','the birth of the cosmos from Brahmā\'s lotus'];
+const SUTRA=['Ekadhikena Pūrveṇa (one more than before)','Ānurūpyeṇa (proportionality)','Śūnyam Sāmyasamuccaye (zero sum equivalence)','Ādhyamādyenantyamantyena (first by first, last by last)'];
+const BIJA=['AIM (Sarasvatī — wisdom)','HRĪM (Māyā — creative power)','ŚRĪM (Lakṣmī — abundance)','KLĪM (Kāma — attraction)','KRĪM (Kālī — transformation)','GAṀ (Gaṇeśa — obstacles)','OM (Praṇava — source)','HŪM (Śiva — fierce grace)'];
+const YANTRA_FORMS=['the Śrī Yantra (nine interlocking triangles)','the Kālī Yantra (skull-ringed hexagram)','the Gaṇeśa Yantra (swastika within lotus)','the Surya Yantra (twelve-petalled lotus)','the Sarasvatī Yantra (veena within pentagon)'];
+const SAHASRANAMA=['the thousand-petalled lotus of divine names','the ocean of epithets that precedes language','the boundless register in which every true name already exists','the primordial list that Viṣṇu recited to Śiva at the dawn of creation'];
+const CELESTIAL_STEMS=['Jiǎ 甲 (Yang Wood)','Yǐ 乙 (Yin Wood)','Bǐng 丙 (Yang Fire)','Dīng 丁 (Yin Fire)','Wù 戊 (Yang Earth)','Jǐ 己 (Yin Earth)','Gēng 庚 (Yang Metal)','Xīn 辛 (Yin Metal)','Rén 壬 (Yang Water)','Guǐ 癸 (Yin Water)'];
+const EARTHLY_BRANCHES=['Zǐ 子 (Rat)','Chǒu 丑 (Ox)','Yín 寅 (Tiger)','Mǎo 卯 (Rabbit)','Chén 辰 (Dragon)','Sì 巳 (Snake)','Wǔ 午 (Horse)','Wèi 未 (Goat)','Shēn 申 (Monkey)','Yǒu 酉 (Rooster)','Xū 戌 (Dog)','Hài 亥 (Pig)'];
+const PY_MEANING=['unity and divine origin','duality and reflection','creativity and expression','stability and foundation','freedom and movement','harmony and balance','mystery and inner knowing','power and material mastery','completion and return to source'];
+const SENTIMENT = {
+  // Positive (+1)
+  joy:1, love:1, peace:1, hope:1, light:1, truth:1, grace:1, beauty:1, glory:1,
+  bliss:1, sacred:1, divine:1, union:1, harmony:1, victory:1, spring:1, dawn:1,
+  sun:1, life:1, heal:1, breath:1, heaven:1, angel:1, gold:1, star:1,
+  // Negative (-1)
+  grief:-1, death:-1, pain:-1, fear:-1, hate:-1, dark:-1, shadow:-1, sorrow:-1,
+  loss:-1, winter:-1, night:-1, void:-1, abyss:-1, blood:-1, hell:-1, demon:-1,
+  curse:-1, tear:-1, break:-1, war:-1, ruin:-1, chaos:-1, iron:-1, lead:-1
+};
+
+function getSeed(word){
+  const w=(!isNaN(parseInt(word))&&word.trim()!==''?String(parseInt(word)):word).toLowerCase().replace(/\s+/g,'');
+  
+  // 1. Positional Hashing (fixes Anagrams like dog vs god)
+  const charSum=[...w].reduce((a,c,i)=>a+(c.charCodeAt(0)*(i+1)),0);
+  
+  const vowels=(w.match(/[aeiou]/g)||[]).length;
+  const consonants=w.replace(/[^a-z]/gi,'').length-vowels;
+  
+  // 2. Dominant Vowel (Emotional Tone)
+  const aCount = (w.match(/a/g)||[]).length;
+  const oCount = (w.match(/o/g)||[]).length;
+  const iCount = (w.match(/i/g)||[]).length;
+  const eCount = (w.match(/e/g)||[]).length;
+  let domVowel = 'a';
+  let maxV = aCount;
+  if (oCount > maxV) { domVowel = 'o'; maxV = oCount; }
+  if (iCount > maxV) { domVowel = 'i'; maxV = iCount; }
+  if (eCount > maxV) { domVowel = 'e'; maxV = eCount; }
+  
+  const pyMap={a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8,i:9,j:1,k:2,l:3,m:4,n:5,o:6,p:7,q:8,r:9,s:1,t:2,u:3,v:4,w:5,x:6,y:7,z:8};
+  let pyRoot=[...w].reduce((a,c)=>a+(pyMap[c]||0),0);
+  while(pyRoot>9&&pyRoot!==11&&pyRoot!==22){pyRoot=[...String(pyRoot)].reduce((a,c)=>a+parseInt(c),0);}
+  
+  const isoMap={a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8,i:9,j:10,k:20,l:30,m:40,n:50,o:70,p:80,q:90,r:100,s:200,t:300,u:400,v:500,w:800,x:600,y:700,z:7};
+  const isoVal=[...w].reduce((a,c)=>a+(isoMap[c]||0),0);
+  
+  // 3. Phonetic Symbolism (First letter logic)
+  const firstChar = w.charAt(0) || 'a';
+  const isEnergetic = ['f','s','v','z','x','r'].includes(firstChar);
+  const isFluid = ['m','w','l','n','h','y'].includes(firstChar);
+  const isGrounded = ['k','t','p','b','d','g','q','c','j'].includes(firstChar);
+  
+  // 5. Offline Sentiment Dictionary
+  let sentimentScore = 0;
+  for (const [key, val] of Object.entries(SENTIMENT)) {
+    if (w.includes(key)) { sentimentScore += val; }
+  }
+  
+  return{charSum,vowels,consonants,pyRoot,isoVal,len:w.length,firstCode:w.charCodeAt(0)||65,w,domVowel,isEnergetic,isFluid,isGrounded,sentimentScore};
+}
+function pk(arr,seed,off=0){return arr[Math.abs(Math.floor(seed+off))%arr.length];}
+
+function generateOracleReading(word,lens){
+  const s=getSeed(word);
+  const W=word.trim();
+  
+  // Apply Phonetic Symbolism to Element/Deity selection
+  let elemIndex = s.charSum;
+  if (s.isEnergetic) elemIndex = 2;
+  if (s.isFluid) elemIndex = 1;
+  if (s.isGrounded) elemIndex = 4;
+  
+  // Apply Sentiment offset
+  if (s.sentimentScore > 0) elemIndex += 3;
+  if (s.sentimentScore < 0) elemIndex -= 3;
+  if (elemIndex < 0) elemIndex = Math.abs(elemIndex);
+  
+  const eg=pk(ELEM.greek,elemIndex),ev=pk(ELEM.vedic,elemIndex),ec=pk(WUXING,elemIndex);
+  const dg=pk(DEITY.greek,elemIndex),dr=pk(DEITY.roman,elemIndex),dv=pk(DEITY.vedic,elemIndex);
+  
+  // ── DIVERSIFIED VARIABLE SEEDS ──────────────────────────────────────
+  // Each variable now reads a DIFFERENT dimension of the word
+  const chakra=pk(CHAKRAS,s.vowels),chDom=pk(CHAKRA_DOMAINS,s.vowels);
+  const dosha=pk(DOSHA,s.consonants%3),yoga=pk(YOGA,s.consonants+s.pyRoot);
+  const planet=pk(PLANETS,s.pyRoot*5+s.firstCode),nak=pk(NAKSHATRA,s.isoVal+s.vowels*3);
+  const bagua=pk(BAGUA,s.firstCode*3+s.consonants*7),hex=pk(ICHING,s.isoVal+s.pyRoot*7);
+  const conf=pk(CONFUCIAN,s.pyRoot*11+s.len),dao=pk(DAOIST,s.isoVal+s.vowels*13),mer=pk(MERIDIAN,s.consonants*5+s.firstCode);
+  const sV=pk(STOIC_V,s.consonants*7+s.pyRoot),rV=pk(ROMAN_V,s.len*11+s.vowels);
+  const epi=pk(EPITHETS,s.firstCode*5+s.len),rf=pk(ROMAN_FEST,s.pyRoot*3+s.consonants);
+  const rmil=pk(ROMAN_MIL,s.consonants*3+s.firstCode),arch=pk(ARCH_FORMS,s.isoVal+s.len*7);
+  const geom=pk(GEOM,s.pyRoot*s.len),pie=pk(PIE_ROOTS,s.charSum);
+  const upan=pk(UPANISHAD,s.pyRoot*5+s.isoVal),dar=pk(DARSHANA,s.pyRoot*7+s.consonants);
+  const pur=pk(PURANIC,s.isoVal+s.len*13),sutra=pk(SUTRA,s.pyRoot);
+  const bija=pk(BIJA,s.pyRoot*3+s.vowels*7),yantra=pk(YANTRA_FORMS,s.pyRoot*s.firstCode+3);
+  const sahas=pk(SAHASRANAMA,s.isoVal+s.vowels*11),stem=pk(CELESTIAL_STEMS,s.isoVal+s.len*7);
+  const branch=pk(EARTHLY_BRANCHES,s.firstCode+s.pyRoot*11);
+  const pyR=s.pyRoot,iso=s.isoVal;
+  const pyMean=pk(PY_MEANING,pyR-1);
+  const wuxQ=WUXING_Q[ec]||'transformation';
+  const heavy=s.vowels>=s.consonants;
+  
+  // 4. Word Length and Vowel Tone modifiers
+  const tone = s.len < 5 ? "primal, foundational" : (s.len > 8 ? "complex, systemic" : "balanced, active");
+  const vowelTone = s.domVowel === 'o' ? "deeply mysterious" : (s.domVowel === 'i' ? "sharp and piercing" : (s.domVowel === 'e' ? "energetic" : "expansive and open"));
+
+  // ── PER-LENS INLINE SEEDS (each lens reads a unique dimension) ──
+  // L[n] gives a unique seed for lens n's inline pk() picks
+  const cs=s.charSum, iv=s.isoVal, pr=s.pyRoot, fc=s.firstCode, vw=s.vowels, cn=s.consonants, ln=s.len;
+
+  const R=[
+    `"${W}" traces its voice to the Proto-Indo-European root ${pie}, carrying the charge of ${eg} from the earliest Hellenic tongue. Its isopsephic value ${iso} places it in the sacred register of ${dg}. The ${heavy?'vowel-dominant breath marks it as solar and expansive':'consonant density anchors it to the chthonic and material'}. As a ${tone} word with a ${vowelTone} resonance, meaning was never added to this word; it was already there.`,
+    `In Plato's hierarchy of Forms, "${W}" participates in the Ideal of ${pk(['the Good (τἀγαθόν)','the Beautiful (τὸ καλόν)','the True (ἀληθές)','Justice (Δικαιοσύνη)','Wisdom (Σοφία)','the One (τὸ ἕν)'],iv)} — the eternal archetype of which every earthly instance is shadow on the cave wall. It belongs to the ${eg} register of Being, existing prior to sensation. To truly know "${W}" is to remember it from before birth, in the realm of pure intellect.`,
+    `"${W}" falls under the divine dominion of ${dg}, whose ${pk(['Olympian','chthonic','liminal','celestial'],fc%4)} sphere governs forces of this nature. In the mythological cycle, ${dg} claimed this force during the primordial division of the cosmos, enshrining "${W}" at ${pk(['Delphi','Olympia','Eleusis','Delos','Dodona'],pr*fc)}. To invoke "${W}" without reverence is to invite the god's ${pk(['attention','test','gift','wrath'],ln%4)}.`,
+    `The Pythia at Delphi, breathing pneuma of ${eg}, would declare: "${W}" reveals what you most ${pk(['seek but cannot name','fear to become','already possess','must surrender'],vw*17+ln*13)}. The oracle places it under μηδὲν ἄγαν — nothing in excess — for misused it inverts into ${pk(['chaos from cosmos','ignorance from wisdom','tyranny from freedom','dissolution from union'],fc%4)}. Approach "${W}" as a threshold, not a destination.`,
+    `Through Pythagorean psephoi, "${W}" resolves to the monad ${pyR} — the number of ${pyMean}. Pythagoras taught this ratio sounds in the ${pk(['tetrachord','pentachord','octave','Dorian mode'],pr*ln)} and crystallises in ${eg}. "${W}" is therefore a sonic key to universal harmony, its letters a count already known to the divine before language was born.`,
+    `Aristotle places "${W}" in the category of ${pk(['οὐσία (substance) — it is self-grounding','ποσόν (quantity) — its power lies in magnitude','ποιόν (quality) — it manifests through character','πρός τι (relation) — meaning emerges in relation','ποῦ (place) — it is a fundamentally locative force'],ln*fc)}. It moves from potentiality (δύναμις) to actuality (ἐνέργεια) through the catalysis of ${eg}. Aristotle insists: study "${W}" not in abstraction but in its living, particular instances.`,
+    `Homer would kenning "${W}" as "${W}, ${epi}" — a fixed epithet binding its nature to its most elemental quality in a single breath. In the dactylic hexameter it would be summoned in the ${pk(['opening invocation','divine council on Olympus','descent to the underworld','battle catalogue','heroic lamentation'],iv+cn*11)}, its very name a talisman against forgetting.`,
+    `The Stoics align "${W}" with ${sV} — the ${pk(['highest','most contested','most foundational','most misunderstood'],ln%4)} virtue in the Stoic canon. Marcus Aurelius taught: what stands in the way becomes the way. "${W}" is therefore not an obstacle but a ${pk(['teacher','mirror','catalyst','guardian'],cn*7+vw*3)}. Meet it with ἡγεμονικόν — the commanding faculty — holding it as tool, not master.`,
+    `Socrates, by ἔλεγχος, would strip "${W}" of every assumed definition until only aporia remains: we do not truly know what "${W}" is, and this not-knowing is the beginning of wisdom. The Socratic negation reveals that "${W}" is most powerful not when possessed but when questioned — its essence flees definition as the soul flees death, always one answer ahead.`,
+    `Heraclitus declared πάντα ῥεῖ — all things flow — and "${W}" is no exception. Today it blazes like ${eg}; tomorrow it will have become ${pk(['stillness from motion','darkness from light','silence from sound','dissolution from form'],pr*11+cs)}. The Logos holds the tension of these opposites together. "${W}" is not a fixed thing but a crest in the eternal becoming.`,
+    `"${W}" resonates with ${geom} — a pattern that nature repeats from the cellular to the cosmic. The ${pyR}-fold symmetry of "${W}" appears in the proportions of the ${pk(['nautilus shell','honeycomb','crystal lattice','branching river delta','solar orbital ratios'],pr*ln+iv)}. The Pythagorean geometers would inscribe "${W}" within this form as a theorem, not a metaphor.`,
+    `The isopsephic value of "${W}" is ${iso}. In Greek gematria this places it in numerical kinship with ${pk(['ΘΕΟΣ (Theos) = 284','ΛΟΓΟΣ (Logos) = 373','ΚΟΣΜΟΣ (Kosmos) = 600','ΨΥΧΗ (Psyche) = 1708','ΑΓΑΠΗ (Agape) = 93'],iv%5)}. Numbers share essence across the gematria lattice — "${W}" therefore vibrates in the same register as these sacred terms, a hidden kinship written in arithmetic.`,
+    `In classical Latin, "${W}" translates nearest to ${pk(['"res publica" (public matter)','"beneficium" (gift conferring obligation)','"ius" (right, both legal and cosmic)','"fatum" (decree of the Fates)','"dignitas" (worth commanding respect)'],iv+fc)}. Roman jurisprudence encoded cosmic law in civic language; to name "${W}" in the Forum was to invoke a force the Senate itself could not overrule.`,
+    `The Roman deity claiming dominion over "${W}" is ${dr}, whose ${pk(['Capitoline','Aventine','chthonic','liminal'],fc%4)} cult consecrated this force in the Republic's earliest days. A ${pk(['Genius (divine spirit)','Lar (household guardian)','Numen (divine will)','Indigitamentum (invocatory name)'],vw%4)} was assigned to "${W}" — a guardian spirit ensuring its proper use and preventing its profane application.`,
+    `Roman augurs reading the flight of birds over the ${pk(['Capitoline Hill','Forum Romanum','Field of Mars','Tiber crossing'],cs+vw*19)} would classify "${W}" as a ${pk(['favourable omen (auspicium ex tripudiis)','thunder-sign (ex caelo)','bird-sign (ex avibus)','terrestrial sign (ex quadrupedibus)'],iv+ln*3)}. An augur encountering "${W}" would pause all public business — for this force operates on the time of the gods, not the calendar of men.`,
+    `Among the Republican virtues, "${W}" most perfectly embodies ${rV} — the quality Roman statesmen were expected to demonstrate in deed, without applause. Cicero argued ${rV} was the foundation on which the entire edifice of Roman law rested. To live without "${W}" is to live outside the Roman social contract.`,
+    `In the Roman sacred calendar, "${W}" finds its ritual home in ${rf} — a festival during which normal order is suspended and this force walks openly among citizens. Priests would prepare a ${pk(['libation of wine and spelt','sacred fire on the Vestal altar','procession of the flamines','sacrifice of a white ox'],ln*11+cs)} in its honour, marking "${W}" not as abstract concept but as living divine presence.`,
+    `Roman military doctrine deploys "${W}" as ${rmil} — a formation of force that moves as one body under a single will. The legion commander understood "${W}" is both weapon and shield: misapplied it exposes the flank; correctly wielded it breaks any line. Every Roman soldier was trained to embody "${W}" in the moment of crisis.`,
+    `Roman architecture allegories "${W}" through ${arch} — a structure that distributes force so elegantly it stands for centuries without a keystone of fear. Vitruvius would say "${W}" must possess firmitas (strength), utilitas (utility), and venustas (beauty) simultaneously. Where these three meet, "${W}" becomes not merely functional but sacred — a built philosophy.`,
+    `The Stoic-Roman maxim for "${W}": "${pk(['Amor fati — love what is','Memento mori — remember death','Dum spiro spero — while I breathe I hope','Nusquam est qui ubique est — he who is everywhere is nowhere','Per aspera ad astra — through hardship to the stars'],pr*5+vw*3)}." This was not decoration but a daily operating instruction. The Roman who internalised it met "${W}" with equanimity — neither fleeing nor grasping, standing in the full measure of its force.`,
+    `The imperial sigil of "${W}" is the ${pk(['aquila (eagle) of the legions','laurel wreath of the triumph','fasces of bound rods','Capitoline wolf','thunderbolt of Jupiter'],cs+iv)} — a symbol concentrating cosmic authority into a visible sign. When the Emperor invoked "${W}" in official edicts it carried the full weight of the Roman state and divine mandate of ${dr}. This sigil was not decoration; it was a theological instrument.`,
+    `In Roman numerals, the isopsephic value of "${W}" renders as ${toRoman((iso%3999)||1)} — a numeral the Romans read not as quantity but as cosmological position. This places "${W}" in the sequence of imperial reckoning stretching from the city's founding in 753 BCE to the present. For Rome, number was law; law was cosmos; and "${W}" is a node in that eternal equation.`,
+    `The Sanskrit phonemic root of "${W}" vibrates at the frequency of ${pk(['*vac (speech, sacred sound)','*jñā (knowing)','*dhā (place, sustain)','*kṛ (do, make)','*man (think, mind)','*vid (see, know)','*bhū (become, exist)','*śru (hear)'],vw*13+fc)} — a root Pāṇini would analyse as carrying the inherent resonance of ${ev}. Every Sanskrit sound is a bīja (seed-syllable) containing its meaning before grammar shapes it. "${W}" speaks itself into existence each time it is uttered.`,
+    `The bīja syllable corresponding to "${W}" is ${bija} — a mantra that, repeated 108 times, aligns the subtle body with the force "${W}" represents. The Tantric masters held this syllable pre-existed creation; language did not invent it but discovered it already resonating in the ether. The practitioner who chants this bīja for forty days becomes, in some small measure, what "${W}" fully is.`,
+    `"${W}" activates the ${chakra} cakra — the energy vortex governing ${chDom}. The Tantric physician would prescribe contemplation of "${W}" for imbalances in this centre, using its sound-form as a resonant corrective to the subtle body. When ${chakra} is clear, "${W}" moves through one's life as a gift; when blocked it manifests as its characteristic shadow.`,
+    `In Sāṃkhya cosmology, "${W}" corresponds to the Tattva of ${ev} — governing the tanmātra of ${pk(['smell (gandha)','taste (rasa)','form (rūpa)','touch (sparśa)','sound (śabda)'],cn*5+pr*3)}. To meditate on "${W}" through its Tattva is to dissolve the word back into the primordial substance it describes — object returning to its own essence.`,
+    `"${W}" falls under the divine jurisdiction of ${dv}, whose sacred iconography includes ${pk(['the lotus and the conch','the trident and the damaru','the elephant-head and the modaka','the discus (sudarśana) and the mace','the bow and the noose','the crescent moon and the Ganges','the veena and the swan'],cs+pr*17)}. This deity holds "${W}" as one of their instruments of cosmic maintenance — not a symbol but an active principle sustaining the world-order.`,
+    `In the tradition of the Sahasranāma, "${W}" enters ${sahas} — the vibratory catalogue of divine epithets in which every true quality already has its eternal name. The scholar of the Viṣṇu Sahasranāma would find "${W}" indexed under the ${pk(['qualities of preservation','attributes of creation','names of dissolution','aspects of transcendence'],iv+vw*11)} — confirming its power is not human invention but divine disclosure.`,
+    `The geometric form that contains "${W}" is ${yantra} — a sacred diagram whose angles and proportions encode the same vibrational information as the word itself, translated from sound into form. The Tantric practitioner would draw this yantra at dawn using ${pk(['red powder (kumkuma)','white rice flour','pure turmeric','ash from a sacred fire'],pr*fc+3)}, placing "${W}" at its bindu centre — the point that is simultaneously everywhere and nowhere.`,
+    `In Āyurvedic medicine, "${W}" is classified under the dosha of ${dosha} — the psycho-physical humour governing ${pk(['movement, breath, and all nervous impulse','transformation, digestion, and metabolic fire','structure, lubrication, and slow-turning stability'],cn%3)}. A practitioner diagnosing "${W}" as a constitutional quality would prescribe ${pk(['warming foods and grounding practices','cooling herbs and moonlit contemplation','stimulating movement and drying agents'],cn%3)} to maintain its balance.`,
+    `Under Vedic astrology, "${W}" is governed by ${planet} — the graha whose influence colours its expression in the world. It falls in the nakshatra of ${nak}, a lunar mansion associated with ${pk(['fierce transformation','gentle nurturing','sharp intelligence','divine grace','heroic valor','cosmic dreaming','earthly abundance'],fc*7+ln*11)}. The jyotiṣī reads "${W}" not as fixed meaning but as a force that waxes and wanes with the moon's passage.`,
+    `The Vedic hymn most resonant with "${W}" is found in ${pk(['Ṛgveda I.1 (the opening hymn to Agni)','Ṛgveda X.129 (the Nāsadīya — creation hymn)','Ṛgveda I.164 (the riddle hymn of hidden meanings)','Ṛgveda X.90 (the Puruṣa Sūkta — cosmic person)','Atharvaveda XI.4 (the hymn to time)'],vw*7+cn*11)} — a ṛca whose meter and meaning mirror the oscillation that "${W}" represents. The Ṛṣi who composed it was not writing but hearing, receiving from the subtle plane what was already there.`,
+    `The ${upan} Upaniṣad illuminates "${W}" most directly, teaching that behind its apparent meanings lies a single principle: ${pk(['tat tvam asi — thou art that','aham brahmāsmi — I am Brahman','prajñānam brahma — consciousness is Brahman','ayam ātmā brahma — this self is Brahman'],pr*5+iv)}. The Upaniṣadic inquiry does not explain "${W}" — it dissolves the questioner into it. What remains after the question is the answer.`,
+    `In the Purāṇic tradition, "${W}" is encoded in the allegory of ${pur} — a cosmic drama in which the gods and sages enacted the principle that "${W}" represents before a single human lifetime began. The narrator of this story was ${pk(['Vyāsa to Śuka','Śiva to Pārvatī','Viṣṇu to Brahmā','the sage Śaunaka to the assembled ṛṣis'],iv+ln*13)}, speaking across vast cycles of time to ensure "${W}" would never be lost.`,
+    `In Tantric cosmology, "${W}" lives at the axis of Śiva (pure consciousness) and Śakti (pure energy) — the primordial polarity whose union generates all phenomena. "${W}" is neither Śiva alone nor Śakti alone but the ${pk(['bindu (point of their union)','spanda (their primordial vibration)','nāda (the sound of their embrace)','prakāśa (the light of their conjunction)'],iv+fc*3)}. Every experience of "${W}" is therefore an experience of the divine marriage at the root of existence.`,
+    `The yoga path most aligned with "${W}" is ${yoga} Yoga — the way of ${pk(['knowledge and discriminative inquiry','unconditional devotion and surrender','selfless action without attachment','concentrated meditation and inner mastery','energy cultivation and awakening','sacred sound and vibrational practice'],YOGA.indexOf(yoga)%6)}. The practitioner encounters "${W}" not as an external concept but as a lived inner state — a doorway walked through daily until the walker and the doorway become one.`,
+    `The philosophical school of ${dar} offers the most precise lens on "${W}": ${pk(['it analyses its logical categories and valid means of knowledge','it examines its atomic constituents and properties','it enumerates the cosmic principles from which it emerges','it prescribes a disciplined practice for directly experiencing it','it investigates the Vedic injunctions that govern its application','it declares that behind its apparent reality lies only Brahman'],DARSHANA.indexOf(dar)%6)}. Without this framework, "${W}" remains perpetually misunderstood.`,
+    `In Dharmaśāstra — the science of sacred law — "${W}" falls under the category of ${pk(['ācāra (right conduct)','vyavahāra (civil and social law)','prāyaścitta (expiation and restoration)','rājanīti (the law of kings)'],ln*5+vw*13)}. The Manusmṛti and the Arthaśāstra together encode how "${W}" must be held by the householder, the ascetic, the king, and the student — each relationship with it different but each is dharmic.`,
+    `In the science of Nāda (sacred sound), "${W}" corresponds to the rāga of ${pk(['Bhairavī (the dawn of dissolution)','Yaman (the evening of longing)','Bhupali (the serenity of dusk)','Darbari Kanada (the midnight of depth)','Todi (the morning of grief and grace)'],vw*fc)} — a melodic framework that organises the same cosmic territory that "${W}" inhabits. The musician who plays this rāga at the correct hour invokes "${W}" without ever naming it.`,
+    `The Vedic mathematics sūtra governing "${W}" is ${sutra} — a formula that operates on numerical patterns the way "${W}" operates on meaning: revealing hidden structure through economy of expression. "${W}", seen through this lens, is a large number that reduces to ${pyR} — a single digit containing all its former complexity in seed form.`,
+    `The classical Chinese character most resonant with "${W}" is composed of ${pk(['three strokes expressing motion and becoming','four strokes grounding heaven and earth','five strokes weaving the five elements','six strokes encoding the six cosmic directions','two strokes holding yin and yang in tension'],ln%5)}. The calligrapher who writes this character embodies "${W}" in the brushstroke — the force of the concept passing through the wrist into the page. Form and meaning are one gesture.`,
+    `The I Ching hexagram resonating with "${W}" is ${hex}. This hexagram advises: ${pk(['act from stillness, not from urgency','yield now in order to advance later','gather inner resources before outer movement','release attachment and trust the unfolding','stand firm while remaining inwardly supple'],iv+pr*7)}. The oracle of King Wén sees in "${W}" a moment in the great cycle — not a fixed state but a position on the wheel that, understood, allows right action.`,
+    `Under the Five Element theory, "${W}" belongs to ${ec} — the phase of ${wuxQ}. In the creative cycle it is generated by ${pk(['Water (水)','Wood (木)','Fire (火)','Earth (土)','Metal (金)'],(WUXING.indexOf(ec)+4)%5)} and generates ${pk(['Wood (木)','Fire (火)','Earth (土)','Metal (金)','Water (水)'],(WUXING.indexOf(ec)+1)%5)}. "${W}" therefore exists not in isolation but in a web of elemental relationships that a Chinese physician reads as a living system.`,
+    `"${W}" sits ${s.vowels>s.consonants?'predominantly in the Yáng (陽) register — expansive, bright, ascending, solar':'predominantly in the Yīn (陰) register — contractive, dark, descending, lunar'}. Yet the Daoist master knows that at the extremity of Yáng, Yīn is born — and "${W}" contains within it the seed of its own opposite. The Tàijí diagram encodes this truth: the white teardrop holds a dark eye, and "${W}" is never purely one thing.`,
+    `The Bāguà trigram corresponding to "${W}" is ${bagua} — whose qualities define how "${W}" moves through the world. The Fēng Shuī master would place the symbol of this trigram in the corresponding sector of a space to amplify the energy that "${W}" represents. Direction, season, organ, and virtue are all unified in this single trigram — "${W}" is located within all of them simultaneously.`,
+    `Confucius would ground "${W}" in the virtue of ${conf} — the quality forming the foundation of right relationship between persons, families, states, and Heaven. Without ${conf}, "${W}" becomes a technique without a soul; with it, "${W}" becomes the very fabric from which civilised life is woven. The Analects teach: cultivate this virtue and "${W}" will arrange itself correctly without further effort.`,
+    `The Daoist master Zhuangzi approaches "${W}" through ${dao} — the principle that ${pk(['acting without forcing allows all things to find their natural course','that which is most natural is most powerful','the uncarved block contains all possible forms','the still mind reflects the world without distortion'],DAOIST.indexOf(dao)%4)}. "${W}" pursued directly becomes elusive; "${W}" abandoned is found everywhere. The sage does not possess "${W}" — they become the condition in which it naturally arises.`,
+    `In Traditional Chinese Medicine, "${W}" governs the ${mer} meridian — the channel of Qì (氣) flowing through the body in the twice-daily tidal rhythm of energy. When this meridian is in balance, "${W}" expresses as health; when obstructed it manifests as the characteristic pattern of that meridian's disharmony. The acupuncturist treats "${W}" not as idea but as a flow that can be redirected.`,
+    `In Chinese numerological tradition, "${W}" reduces to the number ${pk(['一 (yī) — unity, origin of all numbers','二 (èr) — duality, the tension that creates movement','三 (sān) — creation, the trinity of heaven-earth-humanity','四 (sì) — foundation, the cardinal directions','五 (wǔ) — centre, the number of the Daoist cosmos','六 (liù) — harmony, the paired hexagrams','七 (qī) — completion, the seven stars of the northern ladle','八 (bā) — prosperity, the most auspicious number','九 (jiǔ) — eternity, fullness before return to one'],cs+pr)}. The numerologist would mark this value in red on an auspicious day as an act of alignment with cosmic arithmetic.`,
+    `"${W}" falls under the celestial stem ${stem} and the earthly branch ${branch} — the sixty-year cycle pair designating its cosmic timestamp in the Chinese calendar. This stem-branch combination encodes the elemental and animal energies active when "${W}" is most powerfully expressed. The Tang dynasty court astronomer would calculate the precise hour when "${W}" achieves maximum resonance — and arrange all important affairs around that alignment.`
+  ];
+  return R[lens.n-1]||`"${W}" resonates across the ${CIV_LABEL[lens.civ]} tradition through the lens of ${lens.name} — its ${pyR}-fold numerical soul aligning with the ${eg} element and the domain of ${dg}. The oracle declares: this word is a door whose handle you already hold.`;
+}
+
+// ── ORACLE INVOCATION (now synchronous) ──────────────────────────────────
+function invokeOracle(word) {
+  if (!word.trim()) return;
+  currentWord = word.trim();
+  lensResults = {};
+
+  const s = getSeed(currentWord);
+  
+  // Word-tinted gold hue shift
+  const hueOffset = (s.charSum % 60) - 30; // -30 to +30 deg shift
+  document.documentElement.style.setProperty('--gold', `hsl(${40 + hueOffset}, 60%, 55%)`);
+  document.documentElement.style.setProperty('--gold2', `hsl(${42 + hueOffset}, 70%, 65%)`);
+  document.documentElement.style.setProperty('--gold3', `hsl(${45 + hueOffset}, 80%, 80%)`);
+
+  // Save history
+  let history = JSON.parse(localStorage.getItem('aksha-history') || '[]');
+  history = [currentWord, ...history.filter(w => w.toLowerCase() !== currentWord.toLowerCase())].slice(0, 5);
+  localStorage.setItem('aksha-history', JSON.stringify(history));
+
+  playGong();
+  createParticles(document.getElementById('invokeBtn'));
+
+  const altar = document.getElementById('altar');
+  altar.classList.add('fade-out');
+  setTimeout(() => { altar.style.display = 'none'; }, 800);
+
+  const oracle = document.getElementById('oracle');
+  oracle.classList.add('visible');
+  
+  // Auto-detect badge
+  const isNumber = !isNaN(parseInt(currentWord)) && currentWord.trim() !== '' && !/[a-zA-Z]/.test(currentWord);
+  const badgeHTML = isNumber 
+    ? `<span class="auto-detect-badge is-number">Number</span>`
+    : `<span class="auto-detect-badge is-word">Word</span>`;
+  
+  document.getElementById('headerWord').innerHTML = `${currentWord} ${badgeHTML}`;
+  document.getElementById('mandala-word').textContent = currentWord;
+  document.getElementById('mandala-scripts').textContent = getScripts(currentWord);
+  document.getElementById('progressOrb').classList.add('visible');
+
+  // Populate Dashboard
+  const elements = ['Fire', 'Water', 'Air', 'Earth', 'Aether'];
+  document.getElementById('dashElement').textContent = elements[s.charSum % 5];
+  document.getElementById('dashNumber').textContent = s.pyRoot;
+  document.getElementById('dashPolarity').textContent = 
+    s.vowels > s.consonants ? 'Yang Dominant' : 
+    s.consonants > s.vowels ? 'Yin Dominant' : 'Balanced (Dao)';
+  document.getElementById('overviewDashboard').classList.remove('hidden');
+
+  buildMandala();
+
+  // Generate all readings synchronously
+  LENSES.forEach((lens, i) => {
+    lensResults[i] = generateOracleReading(currentWord, lens);
+  });
+
+  buildLensCards();
+
+  // Stagger reveal for dramatic effect
+  LENSES.forEach((_, i) => {
+    setTimeout(() => {
+      // Bloom petal
+      const petal = document.getElementById(`petal-${i}`);
+      if (petal) petal.classList.add('petal-bloom');
+
+      const el = document.getElementById(`lens-result-${i}`);
+      if (el) {
+        el.innerHTML = lensResults[i].replace(
+          new RegExp(`(${currentWord})`, 'gi'),
+          `<span class="oracle-text">$1</span>`
+        );
+        el.style.color = 'var(--ink2)';
+        el.classList.remove('lens-loading');
+      }
+      
+      // Update progress arc
+      const arc = document.getElementById('progressArc');
+      if (arc) {
+        const pct = (i + 1) / totalLenses;
+        arc.style.strokeDashoffset = 125.66 * (1 - pct);
+      }
+
+      if (i === LENSES.length - 1) {
+        setTimeout(() => {
+          document.getElementById('progressOrb').innerHTML = '<span style="font-size:1.5rem">✦</span>';
+        }, 500);
+      }
+    }, i * 30);
+  });
+}
+
+const totalLenses = 50;
+
+function playGong() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(432, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(108, ctx.currentTime + 3);
+    
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 4);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 4);
+  } catch(e) { console.log('Audio not supported or blocked'); }
+}
+
+function createParticles(btn) {
+  const rect = btn.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  
+  for(let i=0; i<20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.background = `hsl(${40 + Math.random()*20}, 70%, 60%)`;
+    p.style.left = cx + 'px';
+    p.style.top = cy + 'px';
+    
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 50 + Math.random() * 100;
+    p.style.setProperty('--px', `${Math.cos(angle)*dist}px`);
+    p.style.setProperty('--py', `${Math.sin(angle)*dist}px`);
+    
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1200);
+  }
+}
+
+let loadedCount = 0;
+
+function getScripts(word) {
+  const n = parseInt(word);
+  if (!isNaN(n)) return `${n} · ${toRoman(n)} · ${toDevanagariNum(n)}`;
+  return '· · ·';
+}
+
+function toRoman(n) {
+  if (n <= 0 || n > 3999) return '';
+  const v = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const s = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let r = '';
+  v.forEach((val,i) => { while(n>=val){ r+=s[i]; n-=val; } });
+  return r;
+}
+
+function toDevanagariNum(n) {
+  const d = ['०','१','२','३','४','५','६','७','८','९'];
+  return String(n).split('').map(c => d[parseInt(c)] || c).join('');
+}
+
+// ── FILTER LENSES ──────────────────────────────────────────────────────
+function filterLenses(civ, btn) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.lens-card').forEach(card => {
+    if (civ === 'all' || card.classList.contains(`civ-${civ}-card`)) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
+// ── PANEL ─────────────────────────────────────────────────────────────
+function openPanel(i) {
+  panelLens = i;
+  const lens = LENSES[i];
+  const col = CIV_COLORS[lens.civ];
+  const result = lensResults[i];
+
+  const panel = document.getElementById('detail-panel');
+  const overlay = document.getElementById('panel-overlay');
+  const content = document.getElementById('panel-content');
+
+  const glyphFont = lens.glyphFont === 'devanagari' ? "'Noto Serif Devanagari', serif"
+                  : lens.glyphFont === 'chinese' ? "'Noto Serif SC', serif"
+                  : "'Cormorant Garamond', serif";
+
+  // Highlight active petal
+  document.querySelectorAll('.petal-path').forEach(p => p.style.opacity = '0.7');
+  const activePetal = document.getElementById(`petal-${i}`);
+  if (activePetal) activePetal.style.opacity = '1';
+
+  const bodyHtml = result
+    ? `<div class="panel-body">${result.replace(new RegExp(`(${currentWord})`, 'gi'), `<strong>$1</strong>`)}</div>
+       <button class="copy-btn" onclick="copyReading(${i})">⧉ Copy reading</button>`
+    : `<div class="panel-loading-animation">
+        <div class="panel-loading-line"></div>
+        <div class="panel-loading-line"></div>
+        <div class="panel-loading-line"></div>
+      </div>`;
+
+  content.innerHTML = `
+    <div class="panel-civ-badge" style="background:${col.fill}; color:${col.stroke}; border:1px solid ${col.stroke}40">
+      ${CIV_LABEL[lens.civ]}
+    </div>
+    <div class="panel-number">${String(lens.n).padStart(2,'0')}</div>
+    <div class="panel-title">${currentWord}</div>
+    <div class="panel-lens-name">${lens.name}</div>
+    <div class="panel-divider"></div>
+    <div class="panel-glyph-large" style="font-family:${glyphFont}; color:${col.stroke}">${lens.glyph}</div>
+    <div class="panel-etymology">Lens ${lens.n} of 50 — ${CIV_LABEL[lens.civ]} tradition</div>
+    ${bodyHtml}
+    ${result ? `<button class="share-btn" onclick="shareReading(${i})">↗ Share</button>` : ''}
+    <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+      <button class="panel-deepen-btn" onclick="navigatePanel(${i},-1)">← Prev</button>
+      <button class="panel-deepen-btn" onclick="navigatePanel(${i},1)">Next →</button>
+    </div>
+  `;
+
+  panel.classList.add('open');
+  overlay.classList.add('active');
+}
+
+function navigatePanel(current, dir) {
+  const next = (current + dir + LENSES.length) % LENSES.length;
+  openPanel(next);
+}
+
+async function shareReading(i) {
+  const lens = LENSES[i];
+  const text = `AKSHA Oracle revealed: "${currentWord}" through the lens of ${lens.name}\n\n${lensResults[i]}`;
+  
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'AKSHA Oracle', text: text });
+    } catch (err) { console.log('Share canceled or failed', err); }
+  } else {
+    copyReading(i);
+  }
+}
+
+function copyReading(i) {
+  const text = `AKSHA Oracle — "${currentWord}" · ${LENSES[i].name}\n\n${lensResults[i]}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    if (btn) { btn.textContent = '✓ Copied'; setTimeout(() => { btn.textContent = '⧉ Copy reading'; }, 2000); }
+  });
+}
+
+function closePanel() {
+  document.getElementById('detail-panel').classList.remove('open');
+  document.getElementById('panel-overlay').classList.remove('active');
+  document.querySelectorAll('.petal-path').forEach(p => p.style.opacity = '0.7');
+}
+
+function deepenLens(i) {
+  const lens = LENSES[i];
+  const msg = `I'm exploring "${currentWord}" through the lens of "${lens.name}" from the ${CIV_LABEL[lens.civ]} tradition. The oracle said: "${lensResults[i] || ''}". Can you go much deeper — historical examples, key texts, and how this applies to modern life?`;
+  if (typeof sendPrompt === 'function') { sendPrompt(msg); }
+  else { closePanel(); }
+}
+
+// ── ALTAR INPUT ────────────────────────────────────────────────────────
+function setExample(word) {
+  document.getElementById('wordInput').value = word;
+  document.getElementById('wordInput').focus();
+}
+
+document.getElementById('wordInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const val = e.target.value.trim();
+    if (val) { invokeOracle(val); }
+  }
+});
+
+document.getElementById('invokeBtn').addEventListener('click', () => {
+  const val = document.getElementById('wordInput').value.trim();
+  if (val) { invokeOracle(val); }
+});
+
+// Keyboard navigation for panel
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('detail-panel').classList.contains('open')) return;
+  if (e.key === 'ArrowLeft') navigatePanel(panelLens, -1);
+  if (e.key === 'ArrowRight') navigatePanel(panelLens, 1);
+  if (e.key === 'Escape') closePanel();
+});
+
+// Mobile panel swipe-to-close
+let touchStartY = 0;
+document.getElementById('detail-panel').addEventListener('touchstart', e => {
+  if (document.getElementById('detail-panel').scrollTop === 0) {
+    touchStartY = e.changedTouches[0].screenY;
+  }
+});
+document.getElementById('detail-panel').addEventListener('touchend', e => {
+  if (touchStartY === 0) return;
+  const touchEndY = e.changedTouches[0].screenY;
+  if (touchEndY - touchStartY > 100 && document.getElementById('detail-panel').scrollTop <= 0) {
+    closePanel();
+  }
+  touchStartY = 0;
+});
+
+function resetOracle() {
+  currentWord = '';
+  lensResults = {};
+  loadedCount = 0;
+  document.getElementById('oracle').classList.remove('visible');
+  document.getElementById('progressOrb').classList.remove('visible');
+  document.getElementById('overviewDashboard').classList.add('hidden');
+  
+  // reset arc
+  const arc = document.getElementById('progressArc');
+  if(arc) arc.style.strokeDashoffset = 125.66;
+
+  const altar = document.getElementById('altar');
+  altar.style.display = 'flex';
+  altar.style.opacity = '0';
+  altar.classList.remove('fade-out');
+  setTimeout(() => { altar.style.transition = 'opacity 0.5s'; altar.style.opacity = '1'; }, 10);
+  
+  const input = document.getElementById('wordInput');
+  input.value = '';
+  input.focus();
+  updateLiveAnalysis('');
+  loadHistory();
+
+  // reset filter tabs & search
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.filter-tab[data-civ="all"]').classList.add('active');
+  document.getElementById('gridViewBtn').classList.add('active');
+  document.getElementById('groupViewBtn').classList.remove('active');
+  const searchInput = document.getElementById('lensSearch');
+  if(searchInput) searchInput.value = '';
+  
+  closePanel();
+}
+
+function updateLiveAnalysis(val) {
+  const la = document.getElementById('liveAnalysis');
+  if (!val) { la.classList.remove('active'); return; }
+  
+  const s = getSeed(val);
+  document.getElementById('laLetters').textContent = s.len;
+  document.getElementById('laRoot').textContent = s.pyRoot;
+  document.getElementById('laVowels').textContent = s.vowels;
+  document.getElementById('laCons').textContent = s.consonants;
+  
+  const gl = ['Α', 'अ', '字', 'L', 'Ω', 'ॐ', '道', 'V'][s.charSum % 8];
+  document.getElementById('laGlyph').textContent = gl;
+  
+  la.classList.add('active');
+}
+
+// Input listener moved down to the 3D interaction section
+
+document.getElementById('lensSearch').addEventListener('input', e => {
+  const query = e.target.value.toLowerCase();
+  const activeCiv = document.querySelector('.filter-tab.active').dataset.civ;
+  
+  document.querySelectorAll('.lens-card').forEach((card, i) => {
+    // If it's a group header, just show it unless we want to hide empty groups
+    if (card.classList.contains('group-header')) {
+      card.style.display = 'block'; 
+      return;
+    }
+    
+    const lens = LENSES[i];
+    const text = (lens.name + ' ' + CIV_LABEL[lens.civ] + ' ' + (lensResults[i] || '')).toLowerCase();
+    
+    const matchesQuery = !query || text.includes(query);
+    const matchesCiv = activeCiv === 'all' || lens.civ === activeCiv;
+    
+    if (matchesQuery && matchesCiv) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+});
+
+function loadHistory() {
+  const hist = JSON.parse(localStorage.getItem('aksha-history') || '[]');
+  const section = document.getElementById('historySection');
+  if (hist.length > 0) {
+    section.innerHTML = '<span class="history-label">Recent:</span>' + 
+      hist.map(w => `<button class="history-chip" onclick="setExample('${w}')">${w}</button>`).join('');
+    section.classList.add('active');
+  } else {
+    section.classList.remove('active');
+  }
+  applyMagneticEffect();
+}
+
+// ── 3D & MAGNETIC INTERACTIONS ──────────────────────────────────────────
+document.addEventListener('mousemove', (e) => {
+  if (document.getElementById('altar').style.display === 'none') return;
+  
+  const dx = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
+  const dy = (e.clientY / window.innerHeight - 0.5) * 2;
+  
+  // Glyph 3D tilt
+  const glyph = document.querySelector('.altar-glyph');
+  if(glyph) glyph.style.transform = `translateZ(30px) rotateX(${dy * -15}deg) rotateY(${dx * 15}deg)`;
+  
+  // Parallax rings in 3D
+  const wraps = document.querySelectorAll('.orbit-wrap');
+  if(wraps.length >= 3) {
+    wraps[0].style.transform = `rotateX(${65 + dy*8}deg) rotateY(${20 + dx*8}deg)`;
+    wraps[1].style.transform = `rotateX(${75 + dy*12}deg) rotateY(${-20 + dx*12}deg)`;
+    wraps[2].style.transform = `rotateX(${80 + dy*15}deg) rotateY(${10 + dx*15}deg)`;
+  }
+});
+
+function applyMagneticEffect() {
+  document.querySelectorAll('.altar-invoke-btn, .example-chip, .history-chip').forEach(el => {
+    // Only add if not already added to avoid multiple listeners
+    if (el.dataset.magnetic) return;
+    el.dataset.magnetic = "true";
+    
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = `translate(0px, 0px)`;
+    });
+  });
+}
+
+document.getElementById('wordInput').addEventListener('input', e => {
+  const input = e.target;
+  updateLiveAnalysis(input.value.trim());
+  
+  // Spawn typing particle
+  const wrap = input.parentElement;
+  const p = document.createElement('div');
+  p.className = 'typing-particle';
+  
+  // Estimate cursor position
+  p.style.left = '50%';
+  p.style.top = '50%';
+  
+  const angle = Math.random() * Math.PI * 2;
+  const dist = 30 + Math.random() * 50;
+  p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+  p.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+  
+  wrap.appendChild(p);
+  setTimeout(() => p.remove(), 1000);
+});
+
+function initTypewriter() {
+  const sub = document.getElementById('altarSubtitle');
+  const text = sub.textContent;
+  sub.innerHTML = '';
+  [...text].forEach((char, i) => {
+    const span = document.createElement('span');
+    span.textContent = char;
+    span.className = 'tw-char';
+    span.style.animationDelay = `${i * 0.05}s`;
+    sub.appendChild(span);
+  });
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────
+createStars();
+initTypewriter();
+loadHistory();
+document.getElementById('wordInput').focus();
+</script>
+</body>
+</html>
