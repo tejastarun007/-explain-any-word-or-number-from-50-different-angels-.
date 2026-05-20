@@ -274,9 +274,6 @@ body {
   letter-spacing: 0.1em;
 }
 
-.oracle-scripts-small {
-  display: flex; gap: 1rem; font-size: 1.1rem; opacity: 0.5;
-}
 
 .new-word-btn {
   font-family: 'Cormorant Garamond', serif;
@@ -327,11 +324,14 @@ body {
   cursor: pointer;
   filter: drop-shadow(0 0 40px rgba(201,168,76,0.15)) !important;
 }
-/* Concentric boundary astrolabe rings styled in premium gold */
-#mandala-svg circle {
+#mandala-svg > defs + circle,
+#mandala-svg > circle[r="300"],
+#mandala-svg > circle[r="240"],
+#mandala-svg > circle[r="180"],
+#mandala-svg > circle[r="120"] {
   stroke: var(--gold2) !important;
-  stroke-opacity: 0.65 !important;
-  stroke-width: 1.5px !important;
+  stroke-opacity: 0.5 !important;
+  stroke-width: 1px !important;
 }
 
 /* Lens grid below */
@@ -701,16 +701,18 @@ body {
 /* Mandala petal animations */
 .petal-path {
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
   transform-origin: 350px 350px;
-  fill-opacity: 0.32 !important; /* Make colors significantly richer and visible */
+  fill-opacity: 0.35 !important;
   stroke-opacity: 0.7 !important;
 }
 .petal-path:hover,
 .petal-group:focus .petal-path {
-  fill-opacity: 0.85 !important;
-  stroke-opacity: 0.95 !important;
-  filter: brightness(1.5) drop-shadow(0 0 10px var(--gold)) !important;
+  fill-opacity: 0.92 !important;
+  stroke-opacity: 1 !important;
+  stroke-width: 1.6px !important;
+  filter: brightness(1.6) drop-shadow(0 0 16px var(--gold)) !important;
+  transform: scale(1.08);
 }
 .petal-group:focus { outline: none; }
 
@@ -727,7 +729,9 @@ body {
 
 /* Petal numbers */
 .petal-number {
-  font-size: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.5);
 }
 
 /* Petal tooltip */
@@ -756,31 +760,7 @@ body {
   vertical-align: middle;
 }
 
-/* center word */
-.mandala-center-word {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 1.8rem;
-  font-weight: 300;
-  fill: var(--gold2);
-  text-anchor: middle;
-  dominant-baseline: middle;
-}
 
-/* Loading state */
-.lens-card.loading .lens-result {
-  background: linear-gradient(90deg, transparent 25%, rgba(201,168,76,0.08) 50%, transparent 75%);
-  background-size: 200% 100%;
-  animation: cardShimmer 1.5s infinite;
-  border-radius: 2px;
-  min-height: 5rem;
-  color: transparent;
-}
-
-@keyframes cardShimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
 
 /* Entrance animation for lens cards */
 .lens-card {
@@ -1130,6 +1110,47 @@ body {
   will-change: transform;
   transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.25s, box-shadow 0.25s, border-color 0.2s !important;
 }
+/* ── AUDIO FREQUENCY SELECTOR ── */
+.freq-selector {
+  display: flex; gap: 0.5rem; align-items: center;
+  justify-content: center; margin-top: 1.2rem;
+  opacity: 0.5; transition: opacity 0.3s;
+}
+.freq-selector:hover { opacity: 1; }
+.freq-label {
+  font-family: 'IM Fell English', serif;
+  font-style: italic; font-size: 0.8rem;
+  color: var(--ink3); margin-right: 0.3rem;
+}
+.freq-opt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 2px; color: var(--ink3);
+  background: transparent; cursor: pointer;
+  transition: all 0.2s;
+}
+.freq-opt:hover { border-color: var(--gold); color: var(--gold2); }
+.freq-opt.active { border-color: var(--gold2); color: var(--gold2); background: rgba(201,168,76,0.1); }
+
+/* ── TABLET GRID ── */
+@media (max-width: 768px) and (min-width: 501px) {
+  .lenses-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+}
+
+/* ── ENHANCED MOBILE TOUCH TARGETS ── */
+@media (max-width: 500px) {
+  .example-chip, .history-chip, .filter-tab, .freq-opt {
+    min-height: 44px; min-width: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .panel-close { width: 44px; height: 44px; font-size: 1.4rem; }
+  .new-word-btn { min-height: 44px; display: inline-flex; align-items: center; }
+  .lens-expand-btn { width: 36px; height: 36px; opacity: 1; font-size: 0.9rem; }
+  .freq-selector { gap: 0.3rem; }
+  .freq-opt { font-size: 0.75rem; padding: 0.3rem 0.5rem; }
+}
 </style>
 </head>
 <body>
@@ -1179,6 +1200,12 @@ body {
       <button class="example-chip" onclick="setExample('Om')">Om</button>
       <button class="example-chip" onclick="setExample('108')">108</button>
       <button class="example-chip" onclick="setExample('Truth')">Truth</button>
+    </div>
+    <div class="freq-selector" id="freqSelector">
+      <span class="freq-label">Resonance</span>
+      <button class="freq-opt active" data-freq="432" onclick="setFreq(432,this)">432 Hz</button>
+      <button class="freq-opt" data-freq="528" onclick="setFreq(528,this)">528 Hz</button>
+      <button class="freq-opt" data-freq="396" onclick="setFreq(396,this)">396 Hz</button>
     </div>
     <div class="history-section" id="historySection">
       <span class="history-label">Recent:</span>
@@ -1279,6 +1306,7 @@ body {
     <button class="filter-tab civ-roman-tab" data-civ="roman" onclick="filterLenses('roman',this)">Roman</button>
     <button class="filter-tab civ-vedic-tab" data-civ="vedic" onclick="filterLenses('vedic',this)">Vedic</button>
     <button class="filter-tab civ-chinese-tab" data-civ="chinese" onclick="filterLenses('chinese',this)">Sinitic</button>
+
     <div class="view-toggle">
       <button class="view-toggle-btn active" id="gridViewBtn" onclick="setViewMode('grid')">▦ Grid</button>
       <button class="view-toggle-btn" id="groupViewBtn" onclick="setViewMode('group')">☰ Grouped</button>
@@ -1336,39 +1364,54 @@ const OracleAudio = {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(950 + Math.random() * 250, now);
     
-    gain.gain.setValueAtTime(0.03, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+    gain.gain.setValueAtTime(0.09, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
     
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     
     osc.start(now);
-    osc.stop(now + 0.35);
+    osc.stop(now + 0.4);
   },
-  // ⛩️ Resonance Gong (Triggered when invoking)
+  // ⛩️ Resonance Gong (Triggered when invoking — slow ceremonial wash)
   playGong() {
     this.resume();
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
-    const frequencies = [110, 165, 220, 330]; // Rich A2 chord harmonics
+    const base = (typeof oracleBaseFreq !== 'undefined' ? oracleBaseFreq : 432) / 4;
+    const frequencies = [base, base * 1.5, base * 2, base * 3];
     
+    // Sub-bass undertone for physical weight
+    const sub = this.ctx.createOscillator();
+    const subGain = this.ctx.createGain();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(base / 2, now);
+    subGain.gain.setValueAtTime(0.35, now);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, now + 7);
+    sub.connect(subGain);
+    subGain.connect(this.ctx.destination);
+    sub.start(now);
+    sub.stop(now + 7.5);
+    
+    // Harmonic layers — slow ceremonial decay matching transition
     frequencies.forEach((freq, idx) => {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
       
       osc.type = idx === 0 ? 'sine' : 'triangle';
       osc.frequency.setValueAtTime(freq, now);
-      osc.detune.setValueAtTime((Math.random() - 0.5) * 8, now);
+      osc.detune.setValueAtTime((Math.random() - 0.5) * 6, now);
       
-      const vol = idx === 0 ? 0.25 : 0.12 / idx;
-      gain.gain.setValueAtTime(vol, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.5 - (idx * 0.4));
+      const vol = idx === 0 ? 0.6 : 0.3 / (idx + 0.5);
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(vol, now + 0.15); // Gentle attack
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 6.5 - (idx * 0.6));
       
       osc.connect(gain);
       gain.connect(this.ctx.destination);
       
       osc.start(now);
-      osc.stop(now + 3.8);
+      osc.stop(now + 7);
     });
   },
   // 🎵 Petal Tick (Soft wood/crystal sound on mandala hover)
@@ -1382,14 +1425,14 @@ const OracleAudio = {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(480 + Math.random() * 160, now);
     
-    gain.gain.setValueAtTime(0.012, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+    gain.gain.setValueAtTime(0.04, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
     
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     
     osc.start(now);
-    osc.stop(now + 0.15);
+    osc.stop(now + 0.22);
   },
   // 🌌 Celestial Harp (Arpeggiated chord on detail reveal)
   playReveal() {
@@ -1401,19 +1444,19 @@ const OracleAudio = {
     chord.forEach((freq, idx) => {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      const playTime = now + (idx * 0.08); // Elegant cascade timing
+      const playTime = now + (idx * 0.12); // Slower cascade
       
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, playTime);
       
-      gain.gain.setValueAtTime(0.05, playTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, playTime + 1.2);
+      gain.gain.setValueAtTime(0.14, playTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, playTime + 1.8);
       
       osc.connect(gain);
       gain.connect(this.ctx.destination);
       
       osc.start(playTime);
-      osc.stop(playTime + 1.3);
+      osc.stop(playTime + 2.0);
     });
   }
 };
@@ -1523,7 +1566,7 @@ function buildMandala() {
   const svg = document.getElementById('petals-group');
   const cx = 350, cy = 350;
   const total = 50;
-  const innerR = 120, outerR = 295;
+  const innerR = 118, outerR = 310;
 
   let html = '';
   LENSES.forEach((lens, i) => {
@@ -1766,6 +1809,7 @@ function generateOracleReading(word,lens){
   
   const eg=pk(ELEM.greek,elemIndex),ev=pk(ELEM.vedic,elemIndex),ec=pk(WUXING,elemIndex);
   const dg=pk(DEITY.greek,elemIndex),dr=pk(DEITY.roman,elemIndex),dv=pk(DEITY.vedic,elemIndex);
+
   
   // ── DIVERSIFIED VARIABLE SEEDS ──────────────────────────────────────
   // Each variable now reads a DIFFERENT dimension of the word
@@ -1969,7 +2013,6 @@ function createParticles(btn) {
   }
 }
 
-let loadedCount = 0;
 
 function getScripts(word) {
   const n = parseInt(word);
@@ -2087,12 +2130,6 @@ function closePanel() {
   document.querySelectorAll('.petal-path').forEach(p => p.style.opacity = '0.7');
 }
 
-function deepenLens(i) {
-  const lens = LENSES[i];
-  const msg = `I'm exploring "${currentWord}" through the lens of "${lens.name}" from the ${CIV_LABEL[lens.civ]} tradition. The oracle said: "${lensResults[i] || ''}". Can you go much deeper — historical examples, key texts, and how this applies to modern life?`;
-  if (typeof sendPrompt === 'function') { sendPrompt(msg); }
-  else { closePanel(); }
-}
 
 // ── ALTAR INPUT ────────────────────────────────────────────────────────
 function setExample(word) {
@@ -2120,26 +2157,40 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closePanel();
 });
 
-// Mobile panel swipe-to-close
+// Mobile panel swipe gestures (vertical close + horizontal navigate)
 let touchStartY = 0;
+let touchStartX = 0;
 document.getElementById('detail-panel').addEventListener('touchstart', e => {
-  if (document.getElementById('detail-panel').scrollTop === 0) {
-    touchStartY = e.changedTouches[0].screenY;
-  }
+  touchStartY = e.changedTouches[0].screenY;
+  touchStartX = e.changedTouches[0].screenX;
 });
 document.getElementById('detail-panel').addEventListener('touchend', e => {
-  if (touchStartY === 0) return;
   const touchEndY = e.changedTouches[0].screenY;
-  if (touchEndY - touchStartY > 100 && document.getElementById('detail-panel').scrollTop <= 0) {
-    closePanel();
+  const touchEndX = e.changedTouches[0].screenX;
+  const dx = touchEndX - touchStartX;
+  const dy = touchEndY - touchStartY;
+
+  // Horizontal swipe: navigate lenses
+  if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy)) {
+    if (dx > 0) navigatePanel(panelLens, -1); // swipe right = prev
+    else navigatePanel(panelLens, 1); // swipe left = next
+    if (navigator.vibrate) navigator.vibrate(10);
+    touchStartX = 0; touchStartY = 0;
+    return;
   }
-  touchStartY = 0;
+
+  // Vertical swipe down: close panel
+  if (dy > 100 && document.getElementById('detail-panel').scrollTop <= 0) {
+    closePanel();
+    if (navigator.vibrate) navigator.vibrate(15);
+  }
+  touchStartY = 0; touchStartX = 0;
 });
 
 function resetOracle() {
   currentWord = '';
   lensResults = {};
-  loadedCount = 0;
+  
   document.getElementById('oracle').classList.remove('visible');
   document.getElementById('progressOrb').classList.remove('visible');
   document.getElementById('overviewDashboard').classList.add('hidden');
@@ -2226,6 +2277,25 @@ function loadHistory() {
   }
   applyMagneticEffect();
 }
+
+// ── AUDIO FREQUENCY SELECTOR ──
+let oracleBaseFreq = parseInt(localStorage.getItem('aksha-freq') || '432');
+function setFreq(freq, btn) {
+  oracleBaseFreq = freq;
+  localStorage.setItem('aksha-freq', String(freq));
+  document.querySelectorAll('.freq-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  OracleAudio.playGong();
+}
+// Restore saved frequency on load
+(function() {
+  const saved = localStorage.getItem('aksha-freq');
+  if (saved) {
+    document.querySelectorAll('.freq-opt').forEach(b => {
+      b.classList.toggle('active', b.dataset.freq === saved);
+    });
+  }
+})();
 
 // ── 3D & MAGNETIC INTERACTIONS ──────────────────────────────────────────
 document.addEventListener('mousemove', (e) => {
